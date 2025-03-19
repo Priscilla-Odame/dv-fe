@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { FiMenu, FiX } from "react-icons/fi";
 
 export default function Dashboard() {
   const [affiliate, setAffiliate] = useState({
@@ -13,6 +14,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isExpired, setIsExpired] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     getAffiliate();
@@ -35,7 +37,7 @@ export default function Dashboard() {
 
         if (expiryDate < now) {
           setIsExpired(true);
-          setAffiliate({ ...data, affiliate_link: "" }); // Clear the expired link
+          setAffiliate({ ...data, affiliate_link: "" });
           setMessage("Your link has expired.");
         } else {
           setIsExpired(false);
@@ -71,78 +73,98 @@ export default function Dashboard() {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("a_c"); // Remove access token
-    sessionStorage.removeItem("u_role"); // Remove any stored user info (optional)
-    sessionStorage.removeItem("u_id"); // Remove any stored user info (optional)
-  
-    window.location.href = "/auth/login"; // Redirect to login page
+    sessionStorage.removeItem("a_c");
+    sessionStorage.removeItem("u_role");
+    sessionStorage.removeItem("u_id");
+
+    window.location.href = "/auth/login";
   };
 
   return (
-    <div className="flex min-h-screen bg-[#1a1a2e]">
+    <div className="flex min-h-screen bg-[#eeedf3]">
+      {/* Sidebar Toggle Button */}
+      <button
+        className="p-4 bg-[#16213e] text-[#e9f4fe] fixed top-4 left-4 z-20 md:hidden rounded-lg"
+        onClick={() => setSidebarOpen(true)}
+      >
+        <FiMenu size={24} />
+      </button>
+
       {/* Sidebar Navigation */}
-      <aside className="w-64 bg-[#16213e] p-6 shadow-lg">
-        <h2 className="text-2xl font-bold text-[#ffcc00] mb-6">Dashboard</h2>
-        <nav className="space-y-4">
-          <Link href="/profile-settings" className="block p-2 bg-[#ffcc00] text-[#16213e] font-bold rounded hover:bg-[#e6b800]">
-            Profile Settings
-          </Link>
-          <Link href="/account-settings" className="block p-2 bg-[#ffcc00] text-[#16213e] font-bold rounded hover:bg-[#e6b800]">
-            Account Settings
-          </Link>
+      <aside
+        className={`fixed inset-y-0 left-0 bg-[#16213e] p-6 shadow-lg flex flex-col justify-between h-screen transform ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform md:translate-x-0 md:relative md:w-64 z-30`}
+      >
+        <div>
+          {/* Close Button (Mobile) */}
           <button
-            onClick={isExpired ? generateAffiliate : undefined}
-            disabled={!isExpired} // Disable if the link is still active
-            className={`w-full text-left block p-2 font-bold rounded ${
-              isExpired
-                ? "bg-[#ffcc00] text-[#16213e] hover:bg-[#e6b800]" // Active (Clickable)
-                : "bg-gray-400 text-gray-600 cursor-not-allowed" // Disabled (Not Clickable)
-            }`}
+            className="absolute top-4 right-4 text-[#e9f4fe] md:hidden"
+            onClick={() => setSidebarOpen(false)}
           >
-            Generate Link
+            <FiX size={24} />
           </button>
-          {/* <Link href="/logout" className="block p-2 bg-[#ffcc00] text-[#16213e] font-bold rounded hover:bg-[#e6b800]"> */}
-          <button
-            onClick={handleLogout}
-            className="block w-full p-2 bg-red-600 text-white font-bold rounded hover:bg-red-700"
-          >
-            Logout
-          </button>
-          {/* </Link> */}
-          <Link href="/others" className="block p-2 bg-[#ffcc00] text-[#16213e] font-bold rounded hover:bg-[#e6b800]">
-            Others
-          </Link>
-        </nav>
+
+          <h2 className="text-2xl font-bold text-[#e9f4fe] mb-6">Dashboard</h2>
+          <nav className="space-y-4">
+            <Link href="/profile-settings" className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]">
+              Profile Settings
+            </Link>
+            <Link href="/account-settings" className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]">
+              Account Settings
+            </Link>
+            <button
+              onClick={isExpired ? generateAffiliate : undefined}
+              disabled={!isExpired}
+              className={`w-full text-left block p-2 font-bold rounded-full ${
+                isExpired ? "bg-[#e9f4fe] text-[#16213e] hover:bg-[#d0e8fd]" : "bg-gray-400 text-gray-600 cursor-not-allowed"
+              }`}
+            >
+              Generate Link
+            </button>
+            <Link href="/others" className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]">
+              Others
+            </Link>
+          </nav>
+        </div>
+
+        {/* Logout Button - Always at the Bottom */}
+        <button
+          onClick={handleLogout}
+          className="w-full p-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 mt-auto"
+        >
+          Logout
+        </button>
       </aside>
 
       {/* Content Area */}
-      <main className="flex-1 p-6 bg-[#0f3460] text-white">
-        <h1 className="text-3xl font-bold text-[#ffcc00]">Welcome to Your Dashboard</h1>
-        <p className="mt-4 text-gray-300">Select an option from the navigation to get started.</p>
+      <main className="flex-1 p-6 bg-[#e9f4fe] text-[#16213e]">
+        <h1 className="text-3xl font-bold">Welcome to Your Dashboard</h1>
+        <p className="mt-4 text-gray-700">Select an option from the navigation to get started.</p>
 
         {/* Affiliate Link Section */}
-        <div className="mt-6 bg-[#1a1a2e] p-4 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold text-[#ffcc00]">Your Affiliate Link</h2>
+        <div className="mt-6 bg-white p-4 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-[#16213e]">Your Affiliate Link</h2>
           {loading ? (
-            <p className="mt-2 text-gray-300">Loading...</p>
+            <p className="mt-2 text-gray-600">Loading...</p>
           ) : isExpired ? (
-            <p className="mt-2 text-red-400">{message}</p>
+            <p className="mt-2 text-red-500">{message}</p>
           ) : (
             <>
-              <p className="mt-2 text-gray-300">Share this link to earn rewards:</p>
-              <div className="bg-gray-800 text-gray-300 p-2 rounded mt-2">
-                <a href={affiliate.affiliate_link} className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">
+              <p className="mt-2 text-gray-700">Share this link to earn rewards:</p>
+              <div className="bg-gray-200 text-gray-800 p-2 rounded mt-2">
+                <a href={affiliate.affiliate_link} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
                   {affiliate.affiliate_link}
                 </a>
               </div>
-              <p className="mt-2 text-gray-400">
-                Expires on: <span className="font-semibold text-white">{new Date(affiliate.link_expiry).toDateString()}</span>
+              <p className="mt-2 text-gray-500">
+                Expires on: <span className="font-semibold text-[#16213e]">{new Date(affiliate.link_expiry).toDateString()}</span>
               </p>
             </>
           )}
 
           {isExpired && (
-            <button onClick={generateAffiliate} className="mt-4 text-blue-400 underline hover:text-blue-600">
+            <button onClick={generateAffiliate} className="mt-4 text-blue-600 underline hover:text-blue-800">
               Click here to generate another one
             </button>
           )}
@@ -150,7 +172,7 @@ export default function Dashboard() {
 
         {/* Products Page Link */}
         <div className="mt-6">
-          <Link href="/products" className="inline-block bg-[#ffcc00] text-[#16213e] font-bold px-4 py-2 rounded hover:bg-[#e6b800]">
+          <Link href="/products" className="inline-block bg-[#16213e] text-[#e9f4fe] font-bold px-4 py-2 rounded hover:bg-[#0f1a2e]">
             View Products
           </Link>
         </div>

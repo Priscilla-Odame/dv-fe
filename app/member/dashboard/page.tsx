@@ -14,17 +14,17 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen bg-white text-black">
       {/* Sidebar */}
-      <aside className="w-64 p-6 border-r border-gray-300 flex flex-col justify-between">
+      <aside className="w-64 p-6 border-r border-gray-300 flex flex-col justify-between bg-[#16213e]">
         <div>
-          <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
+          <h2 className="text-2xl font-bold text-[#e9f4fe] mb-6">Dashboard</h2>
           <nav className="space-y-4">
-            <Link href="/profile-settings" className="block hover:text-gray-600">
+            <Link href="/profile-settings" className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]">
               Profile Settings
             </Link>
-            <Link href="/account-settings" className="block hover:text-gray-600">
+            <Link href="/account-settings" className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]">
               Account Settings
             </Link>
-            <Link href="/others" className="block hover:text-gray-600">
+            <Link href="/others" className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]">
               Others
             </Link>
           </nav>

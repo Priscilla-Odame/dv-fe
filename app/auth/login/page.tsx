@@ -44,7 +44,7 @@ export default function Login() {
                             
                             <button 
                                 type="submit" 
-                                className="w-full p-2 bg-[#16213e] text-[white] font-bold rounded hover:bg-[#e6b800]"
+                                className="w-full p-2 bg-[#16213e] text-[white] font-bold rounded hover:bg-[#e9f4fe] hover:text-[#16213e]"
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? 'Logging in...' : 'Login'}
