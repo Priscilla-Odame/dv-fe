@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Average+Sans&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,6 +7,18 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --black: #000;
+  --white: #fff;
+  --primary-yellow: #b68c02;
+  --secondary-yellow: #d09100;
+  --primary-blue: #3d3bc1;
+
+  --overlay: #000000aa;
+}
+
+* {
+  scroll-behavior: smooth;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,5 +31,5 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
 }

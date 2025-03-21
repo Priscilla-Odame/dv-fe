@@ -2,10 +2,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { FiShoppingCart, FiUser, FiSearch, FiHeart, FiTrash2 } from "react-icons/fi";
+import {
+  FiShoppingCart,
+  FiUser,
+  FiSearch,
+  FiHeart,
+  FiTrash2,
+} from "react-icons/fi";
+import { FaCaretLeft, FaCaretRight, FaCartPlus } from "react-icons/fa";
+import { addToCartFxn, addToWishlistFxn } from "@/helpers/storage/storage";
 
 export default function ShopPage() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
   const [search, setSearch] = useState("");
@@ -14,69 +24,73 @@ export default function ShopPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  useEffect(() => {
-    fetchProducts();
-    loadCart();
-    loadWishlist();
-  }, []);
-
   const fetchProducts = async () => {
+    setLoading(true);
+
     try {
-      const response = await axios.get("http://localhost:3000/api/products");
-      setProducts(response.data);
+      await axios
+        .get("https://dv-be.onrender.com/api/products")
+        .then((response) => {
+          if (response.status === 200) {
+            setProducts(response.data);
+            setLoading(false);
+          } else {
+            setProducts([]);
+            setLoading(false);
+          }
+        });
     } catch (error) {
       console.error("Error fetching products:", error);
       alert("Failed to load products. Please try again later.");
+      setLoading(false);
     }
   };
 
   const loadCart = () => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(storedCart);
+    if (typeof window !== undefined || typeof window !== "undefined") {
+      const storedCart: any = localStorage.getItem("dv_cart");
+      let parsedCart = storedCart ? JSON.parse(storedCart) : [];
+      setCart(parsedCart);
+    }
   };
 
   const loadWishlist = () => {
-    const storedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    setWishlist(storedWishlist);
+    if (typeof window !== undefined || typeof window !== "undefined") {
+      const storedWishlist: any = localStorage.getItem("dv_wishlist");
+      let parsedWishlist = storedWishlist ? JSON.parse(storedWishlist) : [];
+      setWishlist(parsedWishlist);
+    }
   };
 
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      const updatedCart = [...prevCart, product];
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      return updatedCart;
-    });
-  };
-
-  const removeFromCart = (index) => {
+  const removeFromCart = (index: any) => {
     setCart((prevCart) => {
       const updatedCart = prevCart.filter((_, i) => i !== index);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      localStorage.setItem("dv_cart", JSON.stringify(updatedCart));
       return updatedCart;
     });
   };
 
-  const addToWishlist = (product) => {
-    setWishlist((prevWishlist) => {
-      if (!prevWishlist.find((item) => item._id === product._id)) {
+  const addToWishlist = (product: any) => {
+    setWishlist((prevWishlist: any) => {
+      if (!prevWishlist.find((item: any) => item._id === product._id)) {
         const updatedWishlist = [...prevWishlist, product];
-        localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+        localStorage.setItem("dv_wishlist", JSON.stringify(updatedWishlist));
         return updatedWishlist;
       }
       return prevWishlist;
     });
   };
 
-  const removeFromWishlist = (index) => {
+  const removeFromWishlist = (index: any) => {
     setWishlist((prevWishlist) => {
       const updatedWishlist = prevWishlist.filter((_, i) => i !== index);
-      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      localStorage.setItem("dv_wishlist", JSON.stringify(updatedWishlist));
       return updatedWishlist;
     });
   };
 
   const filteredProducts = products.filter(
-    (p) =>
+    (p: any) =>
       p?.name?.toLowerCase().includes(search.toLowerCase()) &&
       (category === "all" || p.category === category)
   );
@@ -89,7 +103,7 @@ export default function ShopPage() {
   // Pagination Functions
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
-  const goToPage = (pageNumber) => {
+  const goToPage = (pageNumber: any) => {
     setCurrentPage(pageNumber);
   };
 
@@ -105,6 +119,11 @@ export default function ShopPage() {
     }
   };
 
+  useEffect(() => {
+    fetchProducts();
+    loadCart();
+    loadWishlist();
+  }, []);
   return (
     <div className="bg-white text-gray-900 min-h-screen">
       {/* Navbar */}
@@ -137,13 +156,20 @@ export default function ShopPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative w-full h-[400px] flex items-center justify-center bg-[#e9f4fe] text-center mt-16">
-        <div>
-          <h2 className="text-3xl font-bold">Exclusive Deals for You!</h2>
-          <p className="mt-2 text-lg">Find the best products curated just for you.</p>
-          <button className="mt-4 px-6 py-2 bg-[#e9f4fe] text-gray-900 rounded-md border border-gray-900">
+      <section className="relative bg-[var(--overlay)] bg-[url(/bg/shop-banner.jpg)] bg-cover bg-top-center bg-no-repeat bg-blend-overlay w-full h-[400px] flex items-center justify-center bg-[#e9f4fe] text-center mt-16">
+        <div className="flex flex-col justify-center items-center gap-y-4">
+          <h2 className="text-3xl font-bold text-white">
+            Exclusive Deals for You!
+          </h2>
+          <p className="text-lg text-white">
+            Find the best products curated just for you.
+          </p>
+          <Link
+            href={"#shop-pane"}
+            className="px-6 py-2 bg-[var(--secondary-yellow)] text-white rounded-md"
+          >
             Explore Now
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -162,34 +188,52 @@ export default function ShopPage() {
       </div>
 
       {/* Product Grid */}
-      <section className="py-10 container mx-auto px-4">
+      <section className="py-10 container mx-auto px-4" id="shop-pane">
         <h3 className="text-2xl font-bold text-center mb-6">Our Collection</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="md:grid md:grid-cols-3 lg:grid-cols-4 flex flex-col justify-start items-start gap-4">
           {paginatedProducts.length > 0 ? (
-            paginatedProducts.map((product) => (
-              <div
-                key={product?._id}
-                className="bg-[#eeedf3] p-4 rounded-lg shadow-md relative hover:scale-105 transition-all duration-300"
-              >
-                <img
-                  src={product?.product_photo?.url || "/ls.jpg"}
-                  alt={product.name}
-                  className="w-full h-auto rounded-md"
-                />
-                <h4 className="mt-2 font-semibold text-[#16213e]">{product?.name}</h4>
-                <p className="text-green-600 font-bold">${product?.price}</p>
-                <button
-                  onClick={() => addToCart(product)}
-                  className="mt-2 px-4 py-2 bg-[#e9f4fe] text-gray-900 rounded-md border border-gray-900 w-full"
+            <>
+              {paginatedProducts.map((product: any) => (
+                <div
+                  key={product?._id}
+                  className="w-full gap-y-2 h-[20rem] gap-y-2 bg-white py-2 rounded-lg shadow-md relative hover:scale-105 transition-all duration-300 border border-black"
                 >
-                  Add to Cart
-                </button>
-                <FiHeart
-                  className="absolute top-2 right-2 text-gray-500 cursor-pointer"
-                  onClick={() => addToWishlist(product)}
-                />
-              </div>
-            ))
+                  <FiHeart
+                    className="absolute top-2 right-2 text-gray-500 cursor-pointer"
+                    onClick={() => addToWishlistFxn(product, setWishlist)}
+                  />
+                  <img
+                    src={
+                      product?.product_photo?.url ||
+                      "/static/bottles-placeholder-2-no-bg.png"
+                    }
+                    alt={product.name}
+                    className="w-full h-[70%] border-b border-gray-200 object-contain"
+                  />
+                  <div className="flex flex-col justify-center items-start gap-y-2 h-[28%] px-4">
+                    <div className="h-[15s%] w-full flex flex-row justify-between items-center ">
+                      <h5 className="h-max max-w-[80%] font-semibold text-[#16213e] text-sm my-0 border border-gray-100 py-1 px-3 rounded-full">
+                        {product?.name}
+                      </h5>
+                      <p className="h-max w-[15%] text-[var(--secondary-yellow)] text-right font-bold my-0">
+                        ${product?.price}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => addToCartFxn(product, setCart)}
+                      className="font-bold flex flex-row justify-center items-center h-[2.5rem] px-4 py-2 bg-[var(--white)] text-black rounded border border-[var(--primary-blue)] w-full hover:text-white hover:bg-[var(--primary-blue)]"
+                    >
+                      Add to Cart &nbsp;
+                      <FaCartPlus className="text-[--primary-blue] hover:text-white cursor-pointer" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : loading ? (
+            <p className="text-center w-full animate-pulse text-black">
+              Loading products...
+            </p>
           ) : (
             <p className="text-center w-full">No products found.</p>
           )}
@@ -200,20 +244,22 @@ export default function ShopPage() {
       <div className="flex justify-center mt-6">
         <button
           onClick={handlePrevious}
-          className="px-4 py-2 bg-[#e9f4fe] text-gray-900 rounded-md border border-gray-900 disabled:opacity-50"
+          className="flex flex-row justify-center items-center px-4 py-2 bg-[var(--primary-blue)] text-white rounded-full disabled:opacity-50"
           disabled={currentPage === 1}
         >
+          <FaCaretLeft className="text-white hover:text-white cursor-pointer" />
           Previous
         </button>
         <span className="mx-4 text-lg">
-          {currentPage} of {totalPages}
+          {currentPage} of {totalPages === 0 ? 1 : totalPages}
         </span>
         <button
           onClick={handleNext}
-          className="px-4 py-2 bg-[#e9f4fe] text-gray-900 rounded-md border border-gray-900 disabled:opacity-50"
-          disabled={currentPage === totalPages}
+          className="flex flex-row justify-center items-center px-4 py-2 bg-[var(--primary-blue)] text-white rounded-full disabled:opacity-50"
+          disabled={currentPage === totalPages || totalPages === 0}
         >
-          Next
+          Next{" "}
+          <FaCaretRight className="text-white hover:text-white cursor-pointer" />
         </button>
       </div>
 
@@ -226,10 +272,16 @@ export default function ShopPage() {
               {cart.length === 0 ? (
                 <p>Your cart is empty</p>
               ) : (
-                cart.map((item, index) => (
-                  <div key={index} className="flex justify-between items-center">
+                cart.map((item: any, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center"
+                  >
                     <p>{item.name}</p>
-                    <button onClick={() => removeFromCart(index)} className="text-red-500">
+                    <button
+                      onClick={() => removeFromCart(index)}
+                      className="text-red-500"
+                    >
                       Remove
                     </button>
                   </div>

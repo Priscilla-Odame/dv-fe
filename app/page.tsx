@@ -1,100 +1,164 @@
+"use client";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { FiShoppingCart, FiUser, FiSearch, FiHeart } from "react-icons/fi";
+import axios from "axios";
+import { FaCartPlus } from "react-icons/fa";
+import { contactInformation } from "@/helpers/data/contact";
 
-export default function Home() {
+export default function HomePage() {
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchFeaturedProducts = async () => {
+    setLoading(true);
+    try {
+      await axios
+        .get("https://dv-be.onrender.com/api/products")
+        .then((response) => {
+          if (response.status === 200) {
+            let featured = response?.data?.slice(0, 3);
+            setFeaturedProducts(featured);
+            setLoading(false);
+          } else {
+            setFeaturedProducts([]);
+            setLoading(false);
+          }
+        });
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      alert("Failed to load products. Please try again later.");
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeaturedProducts();
+  }, []);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    <div className="bg-white text-gray-900">
+      {/* Navbar */}
+      <nav className="p-4 shadow-md bg-white fixed w-full top-0 z-10">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-xl font-bold">Product Store</h1>
+          <div className="flex items-center gap-4">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="px-3 py-1 border rounded-md"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <FiSearch className="text-gray-600 text-xl cursor-pointer" />
+            <Link href="/auth/login">
+              <FiUser className="text-gray-600 text-xl cursor-pointer" />
+            </Link>
+            <FiShoppingCart className="text-gray-600 text-xl cursor-pointer" />
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative bg-[var(--overlay)] bg-[url(/sample-products/products-group.png)] bg-contain bg-center bg-no-repeat bg-blend-overlay w-full h-[400px] flex items-center justify-center bg-[#e9f4fe] text-center mt-16">
+        <div className="flex flex-col justify-center items-center gap-y-4">
+          <h2 className="text-3xl font-bold text-white">Bring Nature Home</h2>
+          <p className="text-lg text-white">
+            Discover beautiful plants for your space
+          </p>
+          <Link
+            href={"/products"}
+            className="px-6 py-2 bg-[var(--secondary-yellow)] text-white rounded-md"
+          >
+            Shop Now
+          </Link>
+        </div>
+      </section>
+
+      {/* Product Grid */}
+      <section className="w-full flex flex-col justify-start items-center gap-y-2 py-10 container mx-auto px-4">
+        <h3 className="text-2xl font-bold text-center mb-6">
+          Best Selling Products
+        </h3>
+        <div className="w-full flex flex-col justify-start items-center gap-y-2">
+          {featuredProducts.length > 0 ? (
+            <div className="w-full md:grid md:grid-cols-3 lg:grid-cols-4 flex flex-col justify-start items-start gap-4">
+              {featuredProducts.map((product: any) => (
+                <div
+                  key={product?._id}
+                  className="w-full gap-y-2 h-[20rem] gap-y-2 bg-white py-2 rounded-lg shadow-md relative hover:scale-105 transition-all duration-300 border border-black"
+                >
+                  <FiHeart
+                    className="absolute top-2 right-2 text-gray-500 cursor-pointer"
+                    // onClick={() => addToWishlist(product)}
+                  />
+                  <img
+                    src={
+                      product?.product_photo?.url ||
+                      "/static/bottles-placeholder-2-no-bg.png"
+                    }
+                    alt={product.name}
+                    className="w-full h-[70%] border-b border-gray-200 object-contain"
+                  />
+                  <div className="flex flex-col justify-center items-start gap-y-2 h-[28%] px-4">
+                    <div className="h-[15s%] w-full flex flex-row justify-between items-center ">
+                      <h5 className="h-max max-w-[80%] font-semibold text-[#16213e] text-sm my-0 border border-gray-100 py-1 px-3 rounded-full">
+                        {product?.name}
+                      </h5>
+                      <p className="h-max w-[15%] text-[var(--secondary-yellow)] text-right font-bold my-0">
+                        ${product?.price}
+                      </p>
+                    </div>
+                    <button
+                      // onClick={() => addToCart(product)}
+                      className="font-bold flex flex-row justify-center items-center h-[2.5rem] px-4 py-2 bg-[var(--white)] text-black rounded border border-[var(--primary-blue)] w-full hover:text-white hover:bg-[var(--primary-blue)]"
+                    >
+                      Add to Cart &nbsp;
+                      <FaCartPlus className="text-[--primary-blue] hover:text-white cursor-pointer" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : loading ? (
+            <p className="text-center w-full animate-pulse text-black">
+              Loading products...
+            </p>
+          ) : (
+            <>
+              <p className="text-center w-full">
+                There are no products here at the moment, please check back here
+                again later.
+              </p>
+              <p className="text-center w-full">
+                You can also give us a call:{" "}
+                <Link
+                  className="italic text-[var(--primary-blue)]"
+                  href={`tel:${contactInformation.primaryContact}`}
+                >
+                  {contactInformation.primaryContact}
+                </Link>{" "}
+                or
+                <Link
+                  className="italic text-[var(--primary-blue)]"
+                  href={`tel:${contactInformation.secondaryContact}`}
+                >
+                  {contactInformation.secondaryContact}
+                </Link>
+              </p>
+            </>
+          )}
+        </div>
+        <Link
+          href={"/products"}
+          className="px-6 py-2 bg-[var(--secondary-yellow)] text-white rounded-md"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+          Explore more
+        </Link>
+      </section>
+
+      {/* Footer */}
+      <footer className="text-center p-4 bg-gray-800 text-white mt-10">
+        <p>&copy; 2025 DV Unlimited. All rights reserved.</p>
       </footer>
     </div>
   );

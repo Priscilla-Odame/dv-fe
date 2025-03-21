@@ -17,7 +17,7 @@ export default function SignUp() {
     current_location: "",
     password: "",
     mobile: "",
-    birth_date: "",
+    birth_date: new Date(),
   };
 
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ export default function SignUp() {
           Sign Up
         </h2>
         <Formik initialValues={initialValues} onSubmit={onSubmit}>
-          {({ isSubmitting, setFieldValue }) => (
+          {({ isSubmitting, setFieldValue, values }) => (
             <Form className="grid grid-cols-2 gap-4">
               <div className="col-span-1">
                 <Field
@@ -43,7 +43,11 @@ export default function SignUp() {
                   placeholder="First Name"
                   className="w-full p-2 bg-white border border-gray-600 rounded text-[#16213e]"
                 />
-                <ErrorMessage name="firstName" component="p" className="text-red-400" />
+                <ErrorMessage
+                  name="firstName"
+                  component="p"
+                  className="text-red-400"
+                />
               </div>
 
               <div className="col-span-1">
@@ -52,7 +56,11 @@ export default function SignUp() {
                   placeholder="Last Name"
                   className="w-full p-2 bg-white border border-gray-600 rounded text-[#16213e]"
                 />
-                <ErrorMessage name="lastName" component="p" className="text-red-400" />
+                <ErrorMessage
+                  name="lastName"
+                  component="p"
+                  className="text-red-400"
+                />
               </div>
 
               <div className="col-span-1">
@@ -70,7 +78,11 @@ export default function SignUp() {
                   placeholder="Email"
                   className="w-full p-2 bg-white border border-gray-600 rounded text-[#16213e]"
                 />
-                <ErrorMessage name="email" component="p" className="text-red-400" />
+                <ErrorMessage
+                  name="email"
+                  component="p"
+                  className="text-red-400"
+                />
               </div>
 
               <div className="col-span-1">
@@ -96,7 +108,11 @@ export default function SignUp() {
                   placeholder="Password"
                   className="w-full p-2 bg-white border border-gray-600 rounded text-[#16213e]"
                 />
-                <ErrorMessage name="password" component="p" className="text-red-400" />
+                <ErrorMessage
+                  name="password"
+                  component="p"
+                  className="text-red-400"
+                />
               </div>
 
               <div className="col-span-1">
@@ -111,13 +127,21 @@ export default function SignUp() {
                   Birth Date
                 </label>
                 <DatePicker
-                  selected={initialValues.birth_date ? new Date(initialValues.birth_date) : null}
-                  onChange={(date: Date) => setFieldValue("birth_date", date)}
+                  selected={
+                    values.birth_date
+                      ? new Date(values.birth_date)
+                      : new Date(initialValues.birth_date)
+                  }
+                  onChange={(date: any) => setFieldValue("birth_date", date)}
                   placeholderText="Date of Birth"
                   className="w-full p-2 bg-white border border-gray-600 rounded text-[#16213e]"
                   dateFormat="MM/dd/yyyy"
                 />
-                <ErrorMessage name="birth_date" component="p" className="text-red-400" />
+                <ErrorMessage
+                  name="birth_date"
+                  component="p"
+                  className="text-red-400"
+                />
               </div>
 
               <div className="col-span-2">
@@ -136,7 +160,10 @@ export default function SignUp() {
         {/* Login Link */}
         <p className="mt-4 text-center text-[#16213e]">
           Already have an account?{" "}
-          <Link href="/auth/login" className="text-[#16213e] font-semibold hover:underline">
+          <Link
+            href="/auth/login"
+            className="text-[#16213e] font-semibold hover:underline"
+          >
             Click here to log in
           </Link>
         </p>

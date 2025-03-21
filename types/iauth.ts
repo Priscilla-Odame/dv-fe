@@ -7,10 +7,10 @@ export interface SignUpFormData {
   current_location: string;
   password: string;
   mobile: string;
-  birth_date: string | null;
+  birth_date: Date | string;
 }
 
 export interface LoginFormData {
-    email: string;
-    password: string;
-  }
+  email: string;
+  password: string;
+}
