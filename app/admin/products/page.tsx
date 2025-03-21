@@ -6,9 +6,9 @@ import { FiEdit, FiTrash2, FiPlus, FiSearch } from "react-icons/fi";
 import AdminLayout from "@/app/components/page_components/AdminLayout";
 
 export default function ProductPage() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Array<any>>([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
+  const [editingProduct, setEditingProduct]: any = useState(null);
   const [editingProductImage, setEditingProductImage] = useState(null);
   const [search, setSearch] = useState("");
   const [formData, setFormData] = useState({
@@ -48,28 +48,28 @@ export default function ProductPage() {
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: any) => {
     setFormData({ ...formData, product_photo: e.target.files[0] });
   };
 
-  const handleEdit = (product) => {
+  const handleEdit = (product: any) => {
     setEditingProduct(product);
     setEditFormData({
       name: product.name,
       price: product.price,
       category: product.category,
       discount_rate: product.discount_rate,
-      stock: product.stock
+      stock: product.stock,
     });
     setShowForm(true);
   };
 
-  const handleEditImage = (product) => {
+  const handleEditImage = (product: any) => {
     setEditingProductImage(product);
     setEditFormImageData({
       product_photo: product.product_photo,
@@ -77,7 +77,7 @@ export default function ProductPage() {
     setShowForm(true);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     const { product_photo, ...dataToSend } = formData;
     try {
@@ -93,8 +93,7 @@ export default function ProductPage() {
           dataToSend,
           getAuthHeaders()
         );
-      }
-      else {
+      } else {
         await axios.post(
           "http://localhost:3000/api/products",
           dataToSend,
@@ -109,7 +108,7 @@ export default function ProductPage() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: any) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       await axios.delete(
         `http://localhost:3000/api/products/${id}`,
@@ -143,9 +142,14 @@ export default function ProductPage() {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products
-            .filter((p) => p?.name?.toLowerCase().includes(search.toLowerCase()))
+            .filter((p) =>
+              p?.name?.toLowerCase().includes(search.toLowerCase())
+            )
             .map((product) => (
-              <div key={product._id} className="bg-gray-100 p-4 rounded-lg shadow-md">
+              <div
+                key={product._id}
+                className="bg-gray-100 p-4 rounded-lg shadow-md"
+              >
                 <img
                   src={product?.product_photo?.url || "/placeholder.jpg"}
                   alt={product.name}
@@ -175,17 +179,78 @@ export default function ProductPage() {
         {showForm && (
           <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded w-1/3">
-              <h2 className="text-xl font-bold mb-4">{editingProduct ? "Update Product" : "Add Product"}</h2>
+              <h2 className="text-xl font-bold mb-4">
+                {editingProduct ? "Update Product" : "Add Product"}
+              </h2>
               <form onSubmit={handleSubmit}>
-                <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleInputChange} className="border p-2 w-full mb-2" required />
-                <input type="number" name="price" placeholder="Price" value={formData.price} onChange={handleInputChange} className="border p-2 w-full mb-2" required />
-                <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleInputChange} className="border p-2 w-full mb-2" required />
-                <input type="number" name="discount_rate" placeholder="Discount Rate" value={formData.discount_rate} onChange={handleInputChange} className="border p-2 w-full mb-2" required />
-                <input type="number" name="stock" placeholder="Stock" value={formData.stock} onChange={handleInputChange} className="border p-2 w-full mb-2" required />
-                <input type="file" name="product_photo" onChange={handleFileChange} className="border p-2 w-full mb-2" />
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="border p-2 w-full mb-2"
+                  required
+                />
+                <input
+                  type="number"
+                  name="price"
+                  placeholder="Price"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  className="border p-2 w-full mb-2"
+                  required
+                />
+                <input
+                  type="text"
+                  name="category"
+                  placeholder="Category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  className="border p-2 w-full mb-2"
+                  required
+                />
+                <input
+                  type="number"
+                  name="discount_rate"
+                  placeholder="Discount Rate"
+                  value={formData.discount_rate}
+                  onChange={handleInputChange}
+                  className="border p-2 w-full mb-2"
+                  required
+                />
+                <input
+                  type="number"
+                  name="stock"
+                  placeholder="Stock"
+                  value={formData.stock}
+                  onChange={handleInputChange}
+                  className="border p-2 w-full mb-2"
+                  required
+                />
+                <input
+                  type="file"
+                  name="product_photo"
+                  onChange={handleFileChange}
+                  className="border p-2 w-full mb-2"
+                />
                 <div className="flex justify-between">
-                  <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-                  <button type="button" onClick={() => { setShowForm(false); setEditingProduct(null); }} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+                  <button
+                    type="submit"
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForm(false);
+                      setEditingProduct(null);
+                    }}
+                    className="bg-gray-500 text-white px-4 py-2 rounded"
+                  >
+                    Cancel
+                  </button>
                 </div>
               </form>
             </div>
