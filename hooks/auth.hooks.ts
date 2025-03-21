@@ -1,10 +1,11 @@
+import { BASE_URL } from "@/helpers/route";
 import { SignUpFormData } from "@/types/iauth";
 import axios from "axios";
 
 export const loginFxn = async (body: { email: string; password: string }) => {
   console.log(body)
   let response = await axios
-    .post("http://localhost:3000/api/auth/login", body)
+    .post(`${BASE_URL}auth/login`, body)
     .then((resp) => {
       if (resp.status == 200) {
         // console.log("response>",response);
@@ -40,7 +41,7 @@ export const registerFxn = (body: SignUpFormData) => {
   });
 
   let response = axios
-    .post("http://localhost:3000/api/auth/register", body)
+    .post(`${BASE_URL}api/auth/register`, body)
     .then((resp) => {
       if (resp.status == 200) {
         console.log(response);

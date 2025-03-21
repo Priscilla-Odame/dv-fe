@@ -1,9 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Link from "next/link";
 import { FiEdit, FiTrash2, FiPlus, FiSearch } from "react-icons/fi";
-import AdminLayout from "@/app/components/page_components/AdminLayout";
+import { BASE_URL } from "@/helpers/route";
 
 export default function ProductPage() {
   const [products, setProducts] = useState<Array<any>>([]);
@@ -41,7 +40,7 @@ export default function ProductPage() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/products");
+      const response = await axios.get(`${BASE_URL}products`);
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -83,19 +82,19 @@ export default function ProductPage() {
     try {
       if (editingProduct) {
         await axios.put(
-          `http://localhost:3000/api/products/${editingProduct._id}`,
+          `${BASE_URL}products/${editingProduct._id}`,
           dataToSend,
           getAuthHeaders()
         );
       } else if (editingProductImage) {
         await axios.post(
-          `http://localhost:3000/api/products/update/product/image/${editingProduct._id}`,
+          `${BASE_URL}products/update/product/image/${editingProduct._id}`,
           dataToSend,
           getAuthHeaders()
         );
       } else {
         await axios.post(
-          "http://localhost:3000/api/products",
+          `${BASE_URL}products`,
           dataToSend,
           getAuthHeaders()
         );
@@ -111,7 +110,7 @@ export default function ProductPage() {
   const handleDelete = async (id: any) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       await axios.delete(
-        `http://localhost:3000/api/products/${id}`,
+        `${BASE_URL}products/${id}`,
         getAuthHeaders()
       );
       fetchProducts();
@@ -119,7 +118,6 @@ export default function ProductPage() {
   };
 
   return (
-    <AdminLayout>
       <div className="p-6 bg-white text-gray-900 min-h-screen">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center border rounded-md p-2 w-1/2">
@@ -257,6 +255,5 @@ export default function ProductPage() {
           </div>
         )}
       </div>
-    </AdminLayout>
   );
 }

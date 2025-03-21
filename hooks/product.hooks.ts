@@ -1,9 +1,10 @@
+import { BASE_URL } from "@/helpers/route";
 import { ProductFormData } from "@/types/product";
 import axios from "axios";
 
 export const getProductsFxn = async () => {
   let response = await axios
-    .get("http://localhost:3000/api/products/")
+    .get(`${BASE_URL}/products/`)
     .then((resp) => {
       if (resp.status == 200) {
         // console.log("response>",response);

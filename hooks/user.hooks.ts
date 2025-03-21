@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/helpers/route";
 import axios from "axios";
 
 export const getUserFxn = async () => {
@@ -6,7 +7,7 @@ export const getUserFxn = async () => {
       return { headers: { Authorization: `Bearer ${token}` } };
     };
     let response = await axios
-      .get("http://localhost:3000/api/users/profile/details", getAuthHeaders())
+      .get(`${BASE_URL}users/profile/details`, getAuthHeaders())
 
       return response.data;
   };

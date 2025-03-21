@@ -6,7 +6,8 @@ const nextConfig: NextConfig = {
   output: "export",
   // output: "standalone",
   env: {
-    NEXT_PUBLIC_APP_URL: "https://https://dv-be.onrender.com/api/",
+    // NEXT_PUBLIC_APP_URL: "https://https://loalhost:/api/",
+    NEXT_PUBLIC_APP_URL: "https://dv-be.onrender.com/api/",
   },
   images: {
     remotePatterns: [

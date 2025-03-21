@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
-import AdminLayout from "../../components/page_components/AdminLayout";
+import { BASE_URL } from "@/helpers/route";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -21,7 +21,7 @@ export default function UsersPage() {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/users",
+       `${BASE_URL}users`,
         getAuthHeaders()
       );
       setUsers(response.data);
@@ -37,7 +37,7 @@ export default function UsersPage() {
   );
 
   return (
-    <AdminLayout>
+
       <div className="p-6">
         {/* Navigation & Search */}
         <div className="flex justify-between items-center mb-6">
@@ -130,6 +130,5 @@ export default function UsersPage() {
           </table>
         </div>
       </div>
-    </AdminLayout>
   );
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { FiMenu, FiX } from "react-icons/fi";
+import { BASE_URL } from "@/helpers/route";
 
 export default function Dashboard() {
   const [affiliate, setAffiliate] = useState({
@@ -28,7 +29,7 @@ export default function Dashboard() {
   const getAffiliate = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:3000/api/affiliates/user`, getAuthHeaders());
+      const response = await axios.get(`${BASE_URL}affiliates/user`, getAuthHeaders());
       const data = response.data;
 
       if (data?.affiliate_link) {
@@ -60,7 +61,7 @@ export default function Dashboard() {
   const generateAffiliate = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:3000/api/affiliates/generate-link`, getAuthHeaders());
+      const response = await axios.get(`${BASE_URL}affiliates/generate-link`, getAuthHeaders());
       setAffiliate(response.data);
       setIsExpired(false);
       setMessage("");
