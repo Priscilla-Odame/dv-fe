@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { FaCaretLeft, FaCaretRight, FaCartPlus } from "react-icons/fa";
 import { addToCartFxn, addToWishlistFxn } from "@/helpers/storage/storage";
+import { BASE_URL } from "@/helpers/route";
 
 export default function ShopPage() {
   const [products, setProducts] = useState([]);
@@ -29,7 +30,7 @@ export default function ShopPage() {
 
     try {
       await axios
-        .get("https://dv-be.onrender.com/api/products")
+        .get(`${BASE_URL}products`)
         .then((response) => {
           if (response.status === 200) {
             setProducts(response.data);
@@ -296,7 +297,9 @@ export default function ShopPage() {
                 Close
               </button>
               <button className="bg-[#e9f4fe] text-[#16213e] py-2 px-4 rounded-md">
-                Proceed to Checkout
+              <Link href="/checkout">
+                  Proceed to Checkout
+                </Link>
               </button>
             </div>
           </div>
