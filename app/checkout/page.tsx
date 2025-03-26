@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "@/helpers/route";
+import { BASE_URL, CLIENT_BASE_URL } from "@/helpers/route";
 
 export default function PaymentForm()  {
   const [email, setEmail] = useState("");
@@ -21,6 +21,7 @@ export default function PaymentForm()  {
       const response = await axios.post(`${BASE_URL}payment/transaction`, {
         email,
         amount,
+        callback_url: `${CLIENT_BASE_URL}orders`
       });
 
       const { authorization_url } = response.data;

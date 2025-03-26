@@ -21,3 +21,19 @@ export const addToWishlistFxn = (product: any, setWishlist: any) => {
     setWishlist(updatedWishlist);
   }
 };
+
+export const loadCart = (setCart: any) => {
+  if (typeof window !== undefined || typeof window !== "undefined") {
+    const storedCart: any = localStorage.getItem("dv_cart");
+    let parsedCart = storedCart ? JSON.parse(storedCart) : [];
+    setCart(parsedCart);
+  }
+};
+
+export const loadCartNoSet = () => {
+  if (typeof window !== undefined || typeof window !== "undefined") {
+    const storedCart: any = localStorage.getItem("dv_cart");
+    let parsedCart = storedCart ? JSON.parse(storedCart) : [];
+    return parsedCart;
+  }
+};

@@ -41,7 +41,7 @@ export const registerFxn = (body: SignUpFormData) => {
   });
 
   let response = axios
-    .post(`${BASE_URL}api/auth/register`, body)
+    .post(`${BASE_URL}auth/register`, body)
     .then((resp) => {
       if (resp.status == 200) {
         console.log(response);
@@ -51,4 +51,10 @@ export const registerFxn = (body: SignUpFormData) => {
     .then((err) => {
       console.log(err);
     });
+};
+
+
+export const getAuthHeaders = () => {
+  const token = sessionStorage.getItem('a_c');
+  return { headers: { Authorization: `Bearer ${token}` } };
 };

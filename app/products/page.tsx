@@ -12,12 +12,14 @@ import {
 import { FaCaretLeft, FaCaretRight, FaCartPlus } from "react-icons/fa";
 import { addToCartFxn, addToWishlistFxn } from "@/helpers/storage/storage";
 import { BASE_URL } from "@/helpers/route";
+import { saveToRemoteCart } from "@/hooks/cart.hook";
 
 export default function ShopPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [cart, setCart] = useState([]);
+  const [userId, setUserId] = useState("");
   const [wishlist, setWishlist] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
@@ -52,6 +54,13 @@ export default function ShopPage() {
       const storedCart: any = localStorage.getItem("dv_cart");
       let parsedCart = storedCart ? JSON.parse(storedCart) : [];
       setCart(parsedCart);
+    }
+  };
+
+  const getUserId = () => {
+    if (typeof window !== undefined || typeof window !== "undefined") {
+      const userId: any = sessionStorage.getItem("u_id");
+      setUserId(userId);
     }
   };
 
@@ -90,11 +99,11 @@ export default function ShopPage() {
     });
   };
 
-  const filteredProducts = products.filter(
+  const filteredProducts = products.length > 0 ? products.filter(
     (p: any) =>
       p?.name?.toLowerCase().includes(search.toLowerCase()) &&
       (category === "all" || p.category === category)
-  );
+  ) : [];
 
   const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * itemsPerPage,
@@ -124,6 +133,7 @@ export default function ShopPage() {
     fetchProducts();
     loadCart();
     loadWishlist();
+    getUserId();
   }, []);
   return (
     <div className="bg-white text-gray-900 min-h-screen">
@@ -221,7 +231,7 @@ export default function ShopPage() {
                       </p>
                     </div>
                     <button
-                      onClick={() => addToCartFxn(product, setCart)}
+                      onClick={() => saveToRemoteCart({...product, purchase_quantity: 1}, setCart, userId)}
                       className="font-bold flex flex-row justify-center items-center h-[2.5rem] px-4 py-2 bg-[var(--white)] text-black rounded border border-[var(--primary-blue)] w-full hover:text-white hover:bg-[var(--primary-blue)]"
                     >
                       Add to Cart &nbsp;
