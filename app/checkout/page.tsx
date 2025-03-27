@@ -9,11 +9,15 @@ import {
   removeFromCartFxn,
 } from "@/helpers/storage/storage";
 import { FaTrash } from "react-icons/fa";
+import { getUserData } from "@/hooks/user.hooks";
+import { userInfo } from "os";
+import { getAuthHeaders } from "@/hooks/auth.hooks";
 
 export default function PaymentForm() {
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState<number | "">("");
   const [loading, setLoading] = useState(false);
+  const [userData, setUserData]: any = useState(null);
   const [cart, setCart] = useState<{
     items: Array<any>;
     totalAmount: number | string;
@@ -33,12 +37,19 @@ export default function PaymentForm() {
     removeFromCartFxn(item, setCart);
   };
 
+  const fetchUser = async () => {
+    let userInfo = await getUserData();
+    setUserData(userInfo);
+    setEmail(userInfo?.email);
+  };
+
   //make payment handler
   const handlePayment = async (e: FormEvent) => {
     e.preventDefault();
     let reqBody = {
       email: email,
       amount: cart.totalAmount,
+      metadata: { cart: cart.items},
       callback_url: `${CLIENT_BASE_URL}orders`,
     };
     console.log("amount", reqBody);
@@ -53,10 +64,11 @@ export default function PaymentForm() {
       // Call the backend to initialize the transaction
       const response = await axios.post(
         `${BASE_URL}payment/transaction`,
-        reqBody
+        reqBody,
+        getAuthHeaders()
       );
       const { authorization_url } = response.data;
-      window.location.href = authorization_url; // Redirect to Paystack's payment page
+      window.open(authorization_url, "_blank"); // Redirect to Paystack's payment page
     } catch (error) {
       console.error("Error initializing payment:", error);
       alert("Failed to initialize payment.");
@@ -68,6 +80,7 @@ export default function PaymentForm() {
   useEffect(() => {
     retrieveCart();
     loadWishlist();
+    fetchUser();
   }, []);
 
   return (
@@ -134,8 +147,8 @@ export default function PaymentForm() {
                 required
                 type="email"
                 placeholder="Enter your email"
-                value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                defaultValue={userData?.email || email || ""}
                 className="border p-2 rounded-md"
               />
 

@@ -2,13 +2,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "@/helpers/route";
+import { getAuthHeaders } from "@/hooks/auth.hooks";
 
 interface Order {
   id: string;
   customerName: string;
   items: { name: string; quantity: number }[];
   totalAmount: number;
-  status: string;
+  payment_status: string;
   date: string;
 }
 
@@ -20,7 +21,7 @@ const OrdersPage = () => {
   // Fetch orders from the API endpoint
   const fetchOrders = async () => {
     try {
-      const response = await axios.get<Order[]>(`${BASE_URL}orders`);
+      const response = await axios.get<Order[]>(`${BASE_URL}payment/mypayment`, getAuthHeaders());
       setOrders(response.data);
     } catch (err) {
       setError("Failed to fetch orders. Please try again later.");
@@ -40,7 +41,7 @@ const OrdersPage = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Orders</h1>
 
-      {orders.length === 0 ? (
+      {orders?.length === 0 ? (
         <div className="text-center">No orders found.</div>
       ) : (
         <div className="overflow-x-auto">
@@ -56,10 +57,10 @@ const OrdersPage = () => {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
+              {orders?.map((order) => (
                 <tr key={order.id} className="text-center">
                   <td className="p-2 border">{order.id}</td>
-                  <td className="p-2 border">{order.customerName}</td>
+                  {/* <td className="p-2 border">{order.customerName}</td> */}
                   <td className="p-2 border">
                     {order.items.map((item) => (
                       <div key={item.name}>
@@ -70,14 +71,14 @@ const OrdersPage = () => {
                   <td className="p-2 border">${order.totalAmount.toFixed(2)}</td>
                   <td
                     className={`p-2 border font-bold ${
-                      order.status === "Pending"
+                      order.payment_status === "Pending"
                         ? "text-yellow-500"
-                        : order.status === "Completed"
+                        : order.payment_status === "Completed"
                         ? "text-green-500"
                         : "text-red-500"
                     }`}
                   >
-                    {order.status}
+                    {order.payment_status}
                   </td>
                   <td className="p-2 border">{new Date(order.date).toLocaleString()}</td>
                 </tr>

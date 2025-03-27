@@ -2,16 +2,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
-import {
-  FiShoppingCart,
-  FiUser,
-  FiSearch,
-  FiHeart,
-  FiTrash2,
-} from "react-icons/fi";
+import { FiHeart } from "react-icons/fi";
 import { FaCaretLeft, FaCaretRight, FaCartPlus } from "react-icons/fa";
 import {
-  addToCartFxn,
   addToWishlistFxn,
   loadCart,
   loadWishListFxn,
@@ -20,12 +13,13 @@ import {
 } from "@/helpers/storage/storage";
 import { BASE_URL } from "@/helpers/route";
 import { removeFromRemoteCart, saveToRemoteCart } from "@/hooks/cart.hook";
-import Image from "next/image";
 import { MdRemoveShoppingCart } from "react-icons/md";
 import { LuHeartOff } from "react-icons/lu";
 import CustomerPageWrapper from "../components/global_components/customerWrapper";
+import { useSearchParams } from "next/navigation";
 
 export default function ShopPage() {
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -44,16 +38,27 @@ export default function ShopPage() {
   const fetchProducts = async () => {
     setLoading(true);
 
+    const affiliateUser = searchParams.get("user");
+    const affiliateNumber = searchParams.get("num");
+    const utmSource = searchParams.get("utm_source");
+    const utmMedium = searchParams.get("utm_medium");
+    const utmCampaign = searchParams.get("utm_campaign");
+
     try {
-      await axios.get(`${BASE_URL}products`).then((response) => {
-        if (response.status === 200) {
-          setProducts(response.data);
-          setLoading(false);
-        } else {
-          setProducts([]);
-          setLoading(false);
-        }
-      });
+      await axios
+        .get(
+          affiliateUser && affiliateNumber && utmSource && utmMedium && utmCampaign ?
+          `${BASE_URL}products?user=${affiliateUser}&num=${affiliateNumber}&utm_source=${utmSource}&utm_medium=${utmMedium}&utm_campaign=${utmCampaign}` : `${BASE_URL}products`
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            setProducts(response.data);
+            setLoading(false);
+          } else {
+            setProducts([]);
+            setLoading(false);
+          }
+        });
     } catch (error) {
       console.error("Error fetching products:", error);
       alert("Failed to load products. Please try again later.");

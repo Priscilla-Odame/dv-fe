@@ -1,7 +1,7 @@
 import { BASE_URL } from "@/helpers/route";
 import { addToCartFxn, removeFromCartFxn } from "@/helpers/storage/storage";
 import axios from "axios";
-import { nonAuthHeaders } from "./auth.hooks";
+import { getAuthHeaders, nonAuthHeaders } from "./auth.hooks";
 
 //add to cart
 export const saveToRemoteCart = async (
@@ -18,21 +18,23 @@ export const saveToRemoteCart = async (
       quantity: product?.purchase_quantity,
     },
   };
-  try {
-    axios
-      .post(`${BASE_URL}carts`, body, { headers: nonAuthHeaders })
-      .then((resp) => {
-        if (resp.status == 200) {
-          console.log("remote cart updated");
-        }
-      })
-      .then((err) => {
-        console.log(err);
-      });
-  } catch {
-    (error: Error) => {
-      console.log("error", error);
-    };
+  if(userId){
+    try {
+      axios
+        .post(`${BASE_URL}carts`, body, getAuthHeaders())
+        .then((resp) => {
+          if (resp.status == 200) {
+            console.log("remote cart updated");
+          }
+        })
+        .then((err) => {
+          console.log(err);
+        });
+    } catch {
+      (error: Error) => {
+        console.log("error", error);
+      };
+    }
   }
 };
 
@@ -45,7 +47,7 @@ export const removeFromRemoteCart = async (product: any, setCart: any) => {
   };
   try {
     axios
-      .post(`${BASE_URL}carts`, body, { headers: nonAuthHeaders })
+      .patch(`${BASE_URL}carts/item/remove`, body, getAuthHeaders())
       .then((resp) => {
         if (resp.status == 200) {
           console.log(resp);

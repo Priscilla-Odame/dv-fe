@@ -14,9 +14,8 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
 
     const onSubmit = (values: LoginFormData) => {
-        setLoading(true);
-        loginFxn(values);
-        setTimeout(() => setLoading(false), 2000); // Simulate API delay
+        // setLoading(true);
+        loginFxn(values, setLoading);
     };
 
     return (
@@ -45,9 +44,9 @@ export default function Login() {
                             <button 
                                 type="submit" 
                                 className="w-full p-2 bg-[#16213e] text-[white] font-bold rounded hover:bg-[#e9f4fe] hover:text-[#16213e]"
-                                disabled={isSubmitting}
+                                disabled={loading}
                             >
-                                {isSubmitting ? 'Logging in...' : 'Login'}
+                                {loading ? 'Logging in...' : 'Login'}
                             </button>
                         </Form>
                     )}
