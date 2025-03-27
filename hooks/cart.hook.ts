@@ -1,37 +1,62 @@
-import { BASE_URL } from '@/helpers/route';
-import { addToCartFxn, loadCartNoSet } from '@/helpers/storage/storage';
-import axios from 'axios';
-import { getAuthHeaders } from './auth.hooks';
+import { BASE_URL } from "@/helpers/route";
+import { addToCartFxn, removeFromCartFxn } from "@/helpers/storage/storage";
+import axios from "axios";
+import { nonAuthHeaders } from "./auth.hooks";
 
-export const saveToRemoteCart = async (product: any, setCart: any, userId: string) => {
-//   Object.keys(body).forEach((key) => {
-//     if (body[key as keyof SignUpFormData] === "") {
-//       delete body[key as keyof SignUpFormData]; // Correctly delete the property
-//     }
-//   });
-    let storageCart = await loadCartNoSet();
-    await addToCartFxn(product, setCart);
-    const structuredItems = [...storageCart, product].map((_product) => {
-        return {
-            product: _product?._id,
-            quantity: _product?.purchase_quantity
+//add to cart
+export const saveToRemoteCart = async (
+  product: any,
+  setCart: any,
+  userId: string
+) => {
+  addToCartFxn(product, setCart);
+
+  let body = {
+    user: userId,
+    item: {
+      product: product?._id,
+      quantity: product?.purchase_quantity,
+    },
+  };
+  try {
+    axios
+      .post(`${BASE_URL}carts`, body, { headers: nonAuthHeaders })
+      .then((resp) => {
+        if (resp.status == 200) {
+          console.log("remote cart updated");
         }
-    });
-
-    let body = {
-        user: userId,
-        items: structuredItems,
-        totalAmount: 6.0
-    };
-    let response = axios
-        .post(`${BASE_URL}carts`, body, getAuthHeaders())
-        .then((resp) => {
-        // if (resp.status == 200) {
-        //     console.log(response);
-        //     window.location.href = "/auth/login";
-        // }
-        })
-        .then((err) => {
+      })
+      .then((err) => {
         console.log(err);
-        });
-}
+      });
+  } catch {
+    (error: Error) => {
+      console.log("error", error);
+    };
+  }
+};
+
+//remove from cart
+export const removeFromRemoteCart = async (product: any, setCart: any) => {
+  removeFromCartFxn(product, setCart);
+  alert("Product removed from cart successfully");
+  let body = {
+    product: product?._id,
+  };
+  try {
+    axios
+      .post(`${BASE_URL}carts`, body, { headers: nonAuthHeaders })
+      .then((resp) => {
+        if (resp.status == 200) {
+          console.log(resp);
+        }
+      })
+      .then((err) => {
+        console.log(err);
+      });
+  } catch {
+    (error: Error) => {
+      console.log(error);
+    };
+  }
+};

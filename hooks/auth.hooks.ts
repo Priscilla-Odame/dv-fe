@@ -3,24 +3,29 @@ import { SignUpFormData } from "@/types/iauth";
 import axios from "axios";
 
 export const loginFxn = async (body: { email: string; password: string }) => {
-  console.log(body)
+  console.log(body);
   let response = await axios
     .post(`${BASE_URL}auth/login`, body)
     .then((resp) => {
       if (resp.status == 200) {
         // console.log("response>",response);
         console.log("resp>", resp);
-        window.sessionStorage.setItem("a_c", resp.data.accessToken)
-        window.sessionStorage.setItem("u_role", resp.data.user.role)
-        window.sessionStorage.setItem("u_mem_type", resp.data.user.membership_type)
-        window.sessionStorage.setItem("u_id", resp.data.user._id)
-        if (resp.data.accessToken){
+        window.sessionStorage.setItem("a_c", resp.data.accessToken);
+        window.sessionStorage.setItem("u_role", resp.data.user.role);
+        window.sessionStorage.setItem(
+          "u_mem_type",
+          resp.data.user.membership_type
+        );
+        window.sessionStorage.setItem("u_id", resp.data.user._id);
+        if (resp.data.accessToken) {
           resp.data.user.role != "admin"
-          ? (resp.data.user.membership_type == "affiliate" ? (window.location.href = "/dashboard") : (window.location.href = "/member/dashboard"))
-          : (window.location.href = "/admin/dashboard");
+            ? resp.data.user.membership_type == "affiliate"
+              ? (window.location.href = "/dashboard")
+              : (window.location.href = "/member/dashboard")
+            : (window.location.href = "/admin/dashboard");
           // window.location.href = "/admindashboard"
-        }else {
-          window.location.href = "#"
+        } else {
+          window.location.href = "#";
         }
         // resp.data.accessToken
         //   ? (window.location.href = "/dashboard")
@@ -53,8 +58,10 @@ export const registerFxn = (body: SignUpFormData) => {
     });
 };
 
-
 export const getAuthHeaders = () => {
-  const token = sessionStorage.getItem('a_c');
+  const token = sessionStorage.getItem("a_c");
   return { headers: { Authorization: `Bearer ${token}` } };
+};
+export const nonAuthHeaders = {
+  "Content-Type": "application/json",
 };

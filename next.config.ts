@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
     // NEXT_PUBLIC_APP_URL: "https://dv-be.onrender.com/api/",
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "http",

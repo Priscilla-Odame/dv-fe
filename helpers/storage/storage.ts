@@ -1,16 +1,79 @@
+import { defaultCart, ICart } from "@/types/istorage";
+
+//cart related methods
 export const addToCartFxn = (product: any, setCart: any) => {
   if (typeof window !== undefined || typeof window !== "undefined") {
     const storedCart: any = localStorage.getItem("dv_cart");
-    let parsedCart = storedCart ? JSON.parse(storedCart) : [];
-    // let trimmedProducts = parsedCart.filter(
-    //   (_product: any) => product !== product
-    // );
-    let updatedCart: any = [...parsedCart, product];
-    localStorage.setItem("dv_cart", JSON.stringify(updatedCart));
-    setCart(updatedCart);
+    let parsedCart: ICart = storedCart ? JSON.parse(storedCart) : defaultCart;
+
+    //cart items
+    let cartItems: Array<any> = parsedCart.items;
+    let newCartItems = [...cartItems, product];
+
+    // cart amount
+    let cartAmount: number = Math.floor(
+      Number(parsedCart.totalAmount) + Number(product.price)
+    );
+
+    let newCart = {
+      items: newCartItems,
+      totalAmount: cartAmount,
+    };
+    localStorage.setItem("dv_cart", JSON.stringify(newCart));
+    setCart(newCart);
   }
 };
 
+export const removeFromCartFxn = (product: any, setCart: any) => {
+  if (typeof window !== undefined || typeof window !== "undefined") {
+    const storedCart: any = localStorage.getItem("dv_cart");
+    let parsedCart: ICart = storedCart ? JSON.parse(storedCart) : defaultCart;
+    let cartItems: Array<any> = parsedCart.items;
+    let cartAmount: number = parsedCart.totalAmount;
+
+    //selected item
+    let selectedItem = cartItems.find((_prod) => _prod._id === product._id);
+    console.log("selectedItem", selectedItem);
+
+    //new cart items
+    let newCartItems = cartItems.filter(
+      (_product: any) => _product._id !== selectedItem._id
+    );
+
+    // cart amount
+    let newCartAmount: number = Math.floor(
+      cartAmount -
+        Math.floor(selectedItem.purchase_quantity * selectedItem.price)
+    );
+
+    let newCart = {
+      items: newCartItems,
+      totalAmount: newCartAmount,
+    };
+
+    localStorage.setItem("dv_cart", JSON.stringify(newCart));
+    setCart(newCart);
+  }
+};
+
+export const loadCart = (setCart: any) => {
+  if (typeof window !== undefined || typeof window !== "undefined") {
+    const storedCart: any = localStorage.getItem("dv_cart");
+    let parsedCart: ICart = storedCart ? JSON.parse(storedCart) : [];
+
+    setCart(parsedCart);
+  }
+};
+
+export const loadCartNoSet = () => {
+  if (typeof window !== undefined || typeof window !== "undefined") {
+    const storedCart: any = localStorage.getItem("dv_cart");
+    let parsedCart = storedCart ? JSON.parse(storedCart) : [];
+    return parsedCart;
+  }
+};
+
+//wishlist related methods
 export const addToWishlistFxn = (product: any, setWishlist: any) => {
   if (typeof window !== undefined || typeof window !== "undefined") {
     const storedWishlist: any = localStorage.getItem("dv_wishlist");
@@ -22,18 +85,22 @@ export const addToWishlistFxn = (product: any, setWishlist: any) => {
   }
 };
 
-export const loadCart = (setCart: any) => {
+export const removeFromWishlistFxn = (product: any, setWishlist: any) => {
   if (typeof window !== undefined || typeof window !== "undefined") {
-    const storedCart: any = localStorage.getItem("dv_cart");
-    let parsedCart = storedCart ? JSON.parse(storedCart) : [];
-    setCart(parsedCart);
+    const storedCart: any = localStorage.getItem("dv_wishlist");
+    let parsedWishlist: Array<any> = storedCart ? JSON.parse(storedCart) : [];
+    let trimmedWishlist = parsedWishlist.filter(
+      (_product) => _product._id !== product._id
+    );
+    localStorage.setItem("dv_wishlist", JSON.stringify(trimmedWishlist));
+    setWishlist(trimmedWishlist);
   }
 };
 
-export const loadCartNoSet = () => {
+export const loadWishListFxn = (setWishlist: any) => {
   if (typeof window !== undefined || typeof window !== "undefined") {
-    const storedCart: any = localStorage.getItem("dv_cart");
-    let parsedCart = storedCart ? JSON.parse(storedCart) : [];
-    return parsedCart;
+    const storedWishlist: any = localStorage.getItem("dv_wishlist");
+    let parsedWishlist = storedWishlist ? JSON.parse(storedWishlist) : [];
+    setWishlist(parsedWishlist);
   }
 };

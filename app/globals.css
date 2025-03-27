@@ -13,6 +13,7 @@
   --primary-yellow: #b68c02;
   --secondary-yellow: #d09100;
   --primary-blue: #3d3bc1;
+  --secondary-blue: #3331a2;
 
   --overlay: #000000aa;
 }
@@ -32,4 +33,5 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: "Roboto Condensed", sans-serif;
+  width: 100vw;
 }
