@@ -17,8 +17,19 @@ import { MdRemoveShoppingCart } from "react-icons/md";
 import { LuHeartOff } from "react-icons/lu";
 import CustomerPageWrapper from "../components/global_components/customerWrapper";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from 'react'
+
 
 export default function ShopPage() {
+  // Using Suspense to handle the async call for search parameters.
+  return (
+    <Suspense fallback={<p className="text-center my-10">Loading Shop...</p>}>
+      <ShopPageContent />
+    </Suspense>
+  );
+}
+
+function ShopPageContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
