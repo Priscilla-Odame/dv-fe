@@ -222,7 +222,7 @@ function ShopPageContent() {
                           {product?.name}
                         </h5>
                         <p className="h-max w-[15%] text-[var(--secondary-yellow)] text-right font-bold my-0">
-                          ${product?.price}
+                          GH₵{product?.price}
                         </p>
                       </div>
                       {cart.items?.some(

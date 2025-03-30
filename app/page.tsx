@@ -17,6 +17,7 @@ import {
 import { LuHeartOff } from "react-icons/lu";
 import { removeFromRemoteCart, saveToRemoteCart } from "@/hooks/cart.hook";
 import { MdRemoveShoppingCart } from "react-icons/md";
+import { BASE_URL } from "@/helpers/route";
 
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -34,7 +35,7 @@ export default function HomePage() {
     setLoading(true);
     try {
       await axios
-        .get("https://dv-be.onrender.com/api/products")
+        .get(`${BASE_URL}products`)
         .then((response) => {
           if (response.status === 200) {
             let featured = response?.data?.slice(0, 4);
@@ -154,7 +155,7 @@ export default function HomePage() {
                           {product?.name}
                         </h5>
                         <p className="h-max w-[15%] text-[var(--secondary-yellow)] text-right font-bold my-0">
-                          ${product?.price}
+                        GH₵{product?.price}
                         </p>
                       </div>
                       {cart.items?.some(

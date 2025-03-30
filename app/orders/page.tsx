@@ -3,25 +3,45 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "@/helpers/route";
 import { getAuthHeaders } from "@/hooks/auth.hooks";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from 'react'
 
 interface Order {
   id: string;
   customerName: string;
-  items: { name: string; quantity: number }[];
+  payment_items: { name: string; purchase_quantity: number }[];
   totalAmount: number;
   payment_status: string;
-  date: string;
+  transaction_date: string;
 }
 
-const OrdersPage = () => {
+export default function OrdersPage() {
+  // Using Suspense to handle the async call for search parameters.
+  return (
+    <Suspense fallback={<p className="text-center my-10">Loading Shop...</p>}>
+      <OrdersPageContent />
+    </Suspense>
+  );
+}
+
+function OrdersPageContent() {
+  const searchParams = useSearchParams();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch orders from the API endpoint
   const fetchOrders = async () => {
+    const reference_num = searchParams.get("reference");
+    const treference_num = searchParams.get("trxref");
     try {
-      const response = await axios.get<Order[]>(`${BASE_URL}payment/mypayment`, getAuthHeaders());
+      const token = sessionStorage.getItem("a_c")
+      let response;
+      if (token) {
+        response = await axios.get<Order[]>(`${BASE_URL}payment/orders/mypayment`, getAuthHeaders());
+      } else {
+        response = await axios.get<Order[]>(reference_num || treference_num ? `${BASE_URL}payment/orders/reference?reference=${reference_num || treference_num}` : `${BASE_URL}payment/orders/reference`, getAuthHeaders()); 
+      }
       setOrders(response.data);
     } catch (err) {
       setError("Failed to fetch orders. Please try again later.");
@@ -49,7 +69,7 @@ const OrdersPage = () => {
             <thead className="bg-gray-200">
               <tr>
                 <th className="p-2 border">Order ID</th>
-                <th className="p-2 border">Customer Name</th>
+                {/* <th className="p-2 border">Customer Name</th> */}
                 <th className="p-2 border">Items</th>
                 <th className="p-2 border">Total Amount</th>
                 <th className="p-2 border">Status</th>
@@ -59,16 +79,16 @@ const OrdersPage = () => {
             <tbody>
               {orders?.map((order) => (
                 <tr key={order.id} className="text-center">
-                  <td className="p-2 border">{order.id}</td>
+                  <td className="p-2 border">{order.id || 1}</td>
                   {/* <td className="p-2 border">{order.customerName}</td> */}
                   <td className="p-2 border">
-                    {order.items.map((item) => (
+                    {order.payment_items.map((item) => (
                       <div key={item.name}>
-                        {item.name} (x{item.quantity})
+                        {item.name} (x{item.purchase_quantity})
                       </div>
                     ))}
                   </td>
-                  <td className="p-2 border">${order.totalAmount.toFixed(2)}</td>
+                  <td className="p-2 border">GH₵{order?.totalAmount?.toFixed(2)}</td>
                   <td
                     className={`p-2 border font-bold ${
                       order.payment_status === "Pending"
@@ -80,7 +100,7 @@ const OrdersPage = () => {
                   >
                     {order.payment_status}
                   </td>
-                  <td className="p-2 border">{new Date(order.date).toLocaleString()}</td>
+                  <td className="p-2 border">{new Date(order?.transaction_date).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
@@ -90,5 +110,3 @@ const OrdersPage = () => {
     </div>
   );
 };
-
-export default OrdersPage;
