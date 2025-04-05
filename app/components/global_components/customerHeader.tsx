@@ -8,6 +8,8 @@ export default function CustomerPageHeader({
   searchQuery,
   setSearch,
   cart,
+  setCart,
+  siteMap,
   setCartOpen,
   wishlist,
   cartOpen,
@@ -25,7 +27,19 @@ export default function CustomerPageHeader({
           />
           <h4 className="lg:text-xl text-sm font-bold">DV Unlimited</h4>
         </Link>
+
         <div className="flex flex-row items-center gap-4">
+          <div className="w-max gap-x-4">
+            {siteMap.map((_linkItem: any, _idx: number) => (
+              <Link
+                key={_idx}
+                href={_linkItem.link}
+                className="text-black text-sm font-bold mr-4"
+              >
+                {_linkItem.title}
+              </Link>
+            ))}
+          </div>
           {showSearch && (
             <div className="bg-white border border-gray-100 rounded-md flex flex-row gap-x-2 px-3 py-1 ">
               <FiSearch className="text-gray-600 text-xl cursor-pointer" />
@@ -38,7 +52,6 @@ export default function CustomerPageHeader({
               />
             </div>
           )}
-
           <div className="flex flex-col w-max h-max">
             <span className="opacity-90 z-20 relative top-0 right-[-1rem] mb-[-50%] text-xs bg-red-500 text-white rounded-full px-2 py-1 text-center">
               {cart?.items?.length ?? 0}

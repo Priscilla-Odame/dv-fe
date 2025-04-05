@@ -12,6 +12,7 @@ export default function CustomerPageWrapper({
   setSearch,
   wishlist,
   cart,
+  setCart,
   setCartOpen,
   cartOpen,
   removeFromCart,
@@ -25,17 +26,20 @@ export default function CustomerPageWrapper({
       {cartOpen && (
         <CartModal
           cart={cart}
+          setCart={setCart}
           removeFromCart={removeFromCart}
           setCartOpen={setCartOpen}
         />
       )}
       <div className="min-h-screen w-[100vw] flex flex-col justify-start items-start overflow-y-auto">
         <CustomerPageHeader
+          siteMap={siteMap}
           showSearch={showSearch}
           searchQuery={searchQuery}
           setSearch={setSearch}
           wishlist={wishlist}
           cart={cart}
+          setCart={setCart}
           setCartOpen={setCartOpen}
           cartOpen={cartOpen}
         />

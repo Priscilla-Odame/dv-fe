@@ -123,6 +123,7 @@ export default function ShopPage() {
       setSearch={setSearch}
       wishlist={wishlist}
       cart={cart}
+      setCart={setCart}
       setCartOpen={setCartOpen}
       cartOpen={cartOpen}
       removeFromCart={removeFromCart}
