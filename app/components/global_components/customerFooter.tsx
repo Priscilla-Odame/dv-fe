@@ -3,8 +3,8 @@ import Link from "next/link";
 
 export default function CustomerPageFooter({ siteMap }: any) {
   return (
-    <footer className="mt-10 flex flex-col justify-center items-center w-full min-h-[15rem]">
-      <div className="w-full px-4 py-2 bg-[var(--primary-blue)] lg:grid lg:grid-cols-3 flex flex-col justify-start items-center gap-x-2">
+    <footer className="mt-10  flex flex-col justify-center items-center w-full min-h-[15rem]">
+      <div className="w-full px-4 py-2 bg-[var(--primary-blue)] lg:grid lg:grid-cols-3 flex flex-col justify-start items-center gap-6">
         <div className="flex flex-col justify-start items-start gap-y-4 w-[100%]">
           <Link href={"/"} className="w-max flex flex-row items-center gap-x-2">
             <Image
