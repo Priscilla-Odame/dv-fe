@@ -78,7 +78,7 @@ export const updateCartItemQuantityFxn = (
     cartAmount =
       action == "inc"
         ? parseFloat(parsedCart.totalAmount + product.price)
-        : parseFloat(parsedCart.totalAmount - product.price);
+        : Number(parsedCart.totalAmount - product.price);
 
     let newCart = {
       items: updatedCartItems,
