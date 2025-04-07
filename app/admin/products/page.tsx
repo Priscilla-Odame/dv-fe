@@ -154,7 +154,7 @@ export default function ProductPage() {
                   className="w-full h-40 object-cover rounded-md"
                 />
                 <h3 className="font-bold mt-2 text-gray-800">{product.name}</h3>
-                <p className="text-green-600 font-semibold">${product.price}</p>
+                <p className="text-green-600 font-semibold">GH₵{product.price}</p>
                 <p className="text-gray-600">Stock: {product.stock}</p>
                 <div className="flex justify-between mt-3">
                   <button
