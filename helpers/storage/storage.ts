@@ -11,9 +11,7 @@ export const addToCartFxn = (product: any, setCart: any) => {
     let newCartItems = [...cartItems, product];
 
     // cart amount
-    let cartAmount: number = Math.floor(
-      Number(parsedCart.totalAmount) + Number(product.price)
-    );
+    let cartAmount: any = parseFloat(parsedCart.totalAmount + product.price);
 
     let newCart = {
       items: newCartItems,
@@ -29,7 +27,7 @@ export const removeFromCartFxn = (product: any, setCart: any) => {
     const storedCart: any = localStorage.getItem("dv_cart");
     let parsedCart: ICart = storedCart ? JSON.parse(storedCart) : defaultCart;
     let cartItems: Array<any> = parsedCart.items;
-    let cartAmount: number = parsedCart.totalAmount;
+    let cartAmount: any = parsedCart.totalAmount;
 
     //selected item
     let selectedItem = cartItems.find((_prod) => _prod._id === product._id);
@@ -41,14 +39,50 @@ export const removeFromCartFxn = (product: any, setCart: any) => {
     );
 
     // cart amount
-    let newCartAmount: number = Math.floor(
-      cartAmount -
-        Math.floor(selectedItem.purchase_quantity * selectedItem.price)
-    );
+    let newCartAmount: any =
+      cartAmount - selectedItem.purchase_quantity * selectedItem.price;
 
     let newCart = {
       items: newCartItems,
       totalAmount: newCartAmount,
+    };
+
+    localStorage.setItem("dv_cart", JSON.stringify(newCart));
+    setCart(newCart);
+  }
+};
+
+export const updateCartItemQuantityFxn = (
+  product: any,
+  setCart: any,
+  action: string
+) => {
+  if (typeof window !== undefined || typeof window !== "undefined") {
+    const storedCart: any = localStorage.getItem("dv_cart");
+    let parsedCart: ICart = storedCart ? JSON.parse(storedCart) : defaultCart;
+    let cartItems: Array<any> = parsedCart.items;
+    let cartAmount: number = parsedCart.totalAmount;
+
+    //selected item
+    let selectedItem = cartItems.find((_prod) => _prod._id === product._id);
+    console.log("selectedItem", selectedItem);
+
+    //new cart items
+    let newCartItems = cartItems.filter(
+      (_product: any) => _product._id !== selectedItem._id
+    );
+
+    let updatedCartItems = [product, ...newCartItems];
+
+    // cart amount
+    cartAmount =
+      action == "inc"
+        ? parseFloat(parsedCart.totalAmount + product.price)
+        : parseFloat(parsedCart.totalAmount - product.price);
+
+    let newCart = {
+      items: updatedCartItems,
+      totalAmount: cartAmount,
     };
 
     localStorage.setItem("dv_cart", JSON.stringify(newCart));

@@ -88,6 +88,7 @@ export default function HomePage() {
       setSearch={setSearch}
       wishlist={wishlist}
       cart={cart}
+      setCart={setCart}
       setCartOpen={setCartOpen}
       cartOpen={cartOpen}
       removeFromCart={removeFromCart}

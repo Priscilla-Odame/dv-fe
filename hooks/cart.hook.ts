@@ -1,5 +1,9 @@
 import { BASE_URL } from "@/helpers/route";
-import { addToCartFxn, removeFromCartFxn } from "@/helpers/storage/storage";
+import {
+  addToCartFxn,
+  removeFromCartFxn,
+  updateCartItemQuantityFxn,
+} from "@/helpers/storage/storage";
 import axios from "axios";
 import { getAuthHeaders, nonAuthHeaders } from "./auth.hooks";
 
@@ -59,6 +63,71 @@ export const removeFromRemoteCart = async (product: any, setCart: any) => {
   } catch {
     (error: Error) => {
       console.log(error);
+    };
+  }
+};
+
+export const updateRemoteCartItem = async (
+  product: any,
+  setCart: any,
+  userId: string,
+  action: string
+) => {
+  updateCartItemQuantityFxn(product, setCart, action);
+
+  let body = {
+    user: userId,
+    item: {
+      product: product?._id,
+      quantity: product?.purchase_quantity,
+    },
+  };
+  try {
+    axios
+      .patch(`${BASE_URL}carts`, body, { headers: nonAuthHeaders })
+      .then((resp) => {
+        if (resp.status == 200) {
+          console.log("remote cart updated");
+        }
+      })
+      .then((err) => {
+        console.log(err);
+      });
+  } catch {
+    (error: Error) => {
+      console.log("error", error);
+    };
+  }
+};
+
+export const decreaseCartItem = async (
+  product: any,
+  setCart: any,
+  userId: string
+) => {
+  addToCartFxn(product, setCart);
+
+  let body = {
+    user: userId,
+    item: {
+      product: product?._id,
+      quantity: product?.purchase_quantity,
+    },
+  };
+  try {
+    axios
+      .post(`${BASE_URL}carts`, body, { headers: nonAuthHeaders })
+      .then((resp) => {
+        if (resp.status == 200) {
+          console.log("remote cart updated");
+        }
+      })
+      .then((err) => {
+        console.log(err);
+      });
+  } catch {
+    (error: Error) => {
+      console.log("error", error);
     };
   }
 };
