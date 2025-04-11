@@ -1,21 +1,15 @@
-version: 2
-framework: nodejs
-
-build:
-  nodejs:
-    version: "20.19.0"  # Specify the version of Node.js you want to use for the build
-    commands:
-      - npm install
-      - npm run build
-
-deploy:
-  artifacts:
-    - out/**  # This will include the contents of the out directory for deployment
-  commands:
+deployment:
+  tasks:
+    - export NODE_ENV=production
+    - export PATH="$HOME/.nvm/versions/node/v20.19.0/bin:$PATH"
+    - cd /home2/dvunlimi/dv-fe
+    - echo "Installing dependencies..."
+    - npm -v
+    - NODE_ENV=development npm install
+    - export PATH="$HOME/dv-fe/node_modules/.bin:$PATH"
+    - echo "Building project..."
+    - npm run build
     - echo "Deploying static site..."
     - rsync -avz out/ $HOME/public_html/  # Sync the contents of the 'out' directory to 'public_html' folder
     - echo "Deployment complete."
 
-# Optional: Define a custom PM2 restart process if you were using Node.js for SSR (not needed for static site)
-# restart: 
-#   - pm2 restart ecosystem.config.js
