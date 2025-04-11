@@ -1,0 +1,43 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches:
+      - main  # Adjust this to the branch you want to deploy from (e.g., 'main' or 'master')
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js (use version matching your cPanel setup)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.18.2'  # or the version you are using on cPanel
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Build the project
+      - name: Build project
+        run: npm run build
+
+      # Step 5: Export static files (for Next.js static export)
+      - name: Export static files
+        run: npm run export
+
+      # Step 6: Deploy to cPanel using rsync
+      - name: Deploy to cPanel
+        env:
+          REMOTE_USER: ${{ secrets.CPANEL_USER }}        # cPanel username (stored as secret)
+          REMOTE_HOST: ${{ secrets.CPANEL_HOST }}        # cPanel host/domain (stored as secret)
+          REMOTE_DIR: ${{ secrets.CPANEL_PUBLIC_HTML }}  # Public_html directory (stored as secret)
+        run: |
+          echo "Deploying static files to cPanel..."
+          rsync -avz --delete out/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR
