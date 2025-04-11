@@ -8,7 +8,7 @@ deployment:
     - NODE_ENV=development npm install
     - export PATH="$HOME/dv-fe/node_modules/.bin:$PATH"
     - echo "Building project..."
-    - npm run build
+    - npm run export
     - echo "Deploying static site..."
     - rsync -avz out/ $HOME/public_html/  # Sync the contents of the 'out' directory to 'public_html' folder
     - echo "Deployment complete."
