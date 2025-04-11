@@ -9,8 +9,10 @@ const nextConfig: NextConfig = {
     // NEXT_PUBLIC_APP_URL: "https://7ae2-109-40-241-12.ngrok-free.app/api/",
     // NEXT_PUBLIC_APP_URL: "http://localhost:3000/api/",
     // NEXT_PUBLIC_CLIENT_URL: "http://localhost:3001/",
-    NEXT_PUBLIC_CLIENT_URL: "https://dv-fe.onrender.com/",
-    NEXT_PUBLIC_APP_URL: "https://dv-be.onrender.com/api/",
+    // NEXT_PUBLIC_CLIENT_URL: "https://dv-fe.onrender.com/",
+    // NEXT_PUBLIC_APP_URL: "https://dv-be.onrender.com/api/",
+    NEXT_PUBLIC_CLIENT_URL: "https://dvunlimitedgh.com/",
+    NEXT_PUBLIC_APP_URL: "https://api.dvunlimitedgh.com/api/",
   },
   images: {
     unoptimized: true,
