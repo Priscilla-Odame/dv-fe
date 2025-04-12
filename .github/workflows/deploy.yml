@@ -28,11 +28,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # Step 5: Export static files (for Next.js static export)
-      - name: Export static files
-        run: npm run export
-
-      # Step 6: Deploy to cPanel using rsync
+      # Step 5: Deploy to cPanel using rsync
       - name: Deploy to cPanel
         env:
           REMOTE_USER: ${{ secrets.CPANEL_USER }}        # cPanel username (stored as secret)
