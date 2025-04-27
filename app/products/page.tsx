@@ -16,7 +16,7 @@ import { removeFromRemoteCart, saveToRemoteCart } from "@/hooks/cart.hook";
 import { MdRemoveShoppingCart } from "react-icons/md";
 import { LuHeartOff } from "react-icons/lu";
 import CustomerPageWrapper from "../components/global_components/customerWrapper";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import { Suspense } from 'react'
 
 
@@ -30,7 +30,7 @@ export default function ShopPage() {
 }
 
 function ShopPageContent() {
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -49,18 +49,19 @@ function ShopPageContent() {
   const fetchProducts = async () => {
     setLoading(true);
 
-    const affiliateUser = searchParams.get("user");
-    const affiliateNumber = searchParams.get("num");
-    const utmSource = searchParams.get("utm_source");
-    const utmMedium = searchParams.get("utm_medium");
-    const utmCampaign = searchParams.get("utm_campaign");
+    // const affiliateUser = searchParams.get("user");
+    // const affiliateNumber = searchParams.get("num");
+    // const utmSource = searchParams.get("utm_source");
+    // const utmMedium = searchParams.get("utm_medium");
+    // const utmCampaign = searchParams.get("utm_campaign");
 
     try {
       await axios
-        .get(
-          affiliateUser && affiliateNumber && utmSource && utmMedium && utmCampaign ?
-          `${BASE_URL}products?user=${affiliateUser}&num=${affiliateNumber}&utm_source=${utmSource}&utm_medium=${utmMedium}&utm_campaign=${utmCampaign}` : `${BASE_URL}products`
-        )
+        // .get(
+        //   affiliateUser && affiliateNumber && utmSource && utmMedium && utmCampaign ?
+        //   `${BASE_URL}products?user=${affiliateUser}&num=${affiliateNumber}&utm_source=${utmSource}&utm_medium=${utmMedium}&utm_campaign=${utmCampaign}` : `${BASE_URL}products`
+        // )
+        .get(`${BASE_URL}products`)
         .then((response) => {
           if (response.status === 200) {
             setProducts(response.data);

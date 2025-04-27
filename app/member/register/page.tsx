@@ -2,12 +2,23 @@
 import { registerMemberFxn } from "@/hooks/auth.hooks";
 import { SignUpFormData } from "@/types/iauth";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import DatePicker from "react-datepicker"; // Import react-datepicker
 import "react-datepicker/dist/react-datepicker.css"; // Import the CSS
+import { useSearchParams } from "next/navigation";
 
-export default function SignUp() {
+export default function MemberRegisterPage() {
+  // Using Suspense to handle the async call for search parameters.
+  return (
+    <Suspense fallback={<p className="text-center my-10">Loading Page...</p>}>
+      <MemberRegisterContent />
+    </Suspense>
+  );
+}
+
+function MemberRegisterContent() {
+  const searchParams = useSearchParams();
   const initialValues = {
     firstName: "",
     lastName: "",
@@ -24,7 +35,15 @@ export default function SignUp() {
 
   const onSubmit = (values: SignUpFormData) => {
     setLoading(true);
-    registerMemberFxn(values);
+    const qryParams = {
+      affiliateUser : searchParams.get("user"),
+      affiliateNumber : searchParams.get("num"),
+      utmSource : searchParams.get("utm_source"),
+      utmMedium : searchParams.get("utm_medium"),
+      utmCampaign : searchParams.get("utm_campaign"),
+
+    }
+    registerMemberFxn(values, qryParams);
     setTimeout(() => setLoading(false), 2000); // Simulate API delay
   };
 

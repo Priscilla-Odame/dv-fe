@@ -18,6 +18,7 @@ export default function SignUp() {
     password: "",
     mobile: "",
     birth_date: new Date(),
+    membership_type: ""
   };
 
   const [loading, setLoading] = useState(false);
@@ -143,6 +144,27 @@ export default function SignUp() {
                   className="text-red-400"
                 />
               </div>
+
+              <div className="col-span-2">
+              <label htmlFor="membership_type" className="block mb-1 font-medium">
+                Account Type
+              </label>
+              <Field
+                as="select"
+                name="membership_type"
+                className="w-full p-2 bg-white border border-gray-600 rounded text-[#16213e]"
+              >
+                <option value="">Select Account Type</option>
+                <option value="member">Member</option>
+                <option value="affiliate">Affiliate</option>
+              </Field>
+              <ErrorMessage
+                name="membership_type"
+                component="p"
+                className="text-red-400"
+              />
+            </div>
+
 
               <div className="col-span-2">
                 <button

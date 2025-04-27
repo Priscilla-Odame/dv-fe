@@ -20,6 +20,7 @@ export default function CustomerPageWrapper({
   const siteMap = [
     { title: "Home", link: "/" },
     { title: "Shop", link: "/products" },
+    { title: "Dashboard", link: "/member/dashboard" },
   ];
   return (
     <>

@@ -7,7 +7,7 @@ import Link from "next/link";
 import DatePicker from "react-datepicker"; // Import react-datepicker
 import "react-datepicker/dist/react-datepicker.css"; // Import the CSS
 
-export default function SignUp() {
+export default function AdminSignUp() {
   const initialValues = {
     firstName: "",
     lastName: "",

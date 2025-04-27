@@ -14,30 +14,77 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen bg-white text-black">
       {/* Sidebar */}
-      <aside className="w-64 p-6 border-r border-gray-300 flex flex-col justify-between bg-[#16213e]">
+      <aside className="w-60 p-4 border-r border-gray-300 flex flex-col justify-between bg-[#16213e] text-sm">
         <div>
-          <h2 className="text-2xl font-bold text-[#e9f4fe] mb-6">Dashboard</h2>
-          <nav className="space-y-4">
-            <Link href="/profile-settings" className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]">
-              Profile Settings
-            </Link>
-            <Link href="/account-settings" className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]">
-              Account Settings
-            </Link>
-            <Link href="/others" className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]">
-              Others
-            </Link>
-          </nav>
+          <h2 className="text-xl font-bold text-[#e9f4fe] mb-4">Dashboard</h2>
+
+          <div className="mb-3">
+            <p className="text-[#e9f4fe] font-semibold mb-1">Account</p>
+            <nav className="space-y-1">
+              <Link href="/profile-settings" className="block px-2 py-1 bg-[#e9f4fe] text-[#16213e] rounded hover:bg-[#d0e8fd]">
+                Profile Settings
+              </Link>
+              <Link href="/account-settings" className="block px-2 py-1 bg-[#e9f4fe] text-[#16213e] rounded hover:bg-[#d0e8fd]">
+                Account Settings
+              </Link>
+            </nav>
+          </div>
+
+          <div className="mb-3">
+            <p className="text-[#e9f4fe] font-semibold mb-1">Sales</p>
+            <nav className="space-y-1">
+              <Link href="/orders" className="block px-2 py-1 bg-[#e9f4fe] text-[#16213e] rounded hover:bg-[#d0e8fd]">
+                Orders
+              </Link>
+              <Link href="/referrals" className="block px-2 py-1 bg-[#e9f4fe] text-[#16213e] rounded hover:bg-[#d0e8fd]">
+                Referrals
+              </Link>
+              <Link href="/commissions" className="block px-2 py-1 bg-[#e9f4fe] text-[#16213e] rounded hover:bg-[#d0e8fd]">
+                Commissions
+              </Link>
+            </nav>
+          </div>
+
+          <div className="mb-3">
+            <p className="text-[#e9f4fe] font-semibold mb-1">Clients</p>
+            <nav className="space-y-1">
+              <Link href="/clients" className="block px-2 py-1 bg-[#e9f4fe] text-[#16213e] rounded hover:bg-[#d0e8fd]">
+                My Clients
+              </Link>
+            </nav>
+          </div>
+
+          <div className="mb-3">
+            <p className="text-[#e9f4fe] font-semibold mb-1">Products</p>
+            <nav className="space-y-1">
+              <Link href="/products" className="block px-2 py-1 bg-[#e9f4fe] text-[#16213e] rounded hover:bg-[#d0e8fd]">
+                Products
+              </Link>
+              <Link href="/reports" className="block px-2 py-1 bg-[#e9f4fe] text-[#16213e] rounded hover:bg-[#d0e8fd]">
+                Reports
+              </Link>
+            </nav>
+          </div>
+
+          <div>
+            <p className="text-[#e9f4fe] font-semibold mb-1">Help</p>
+            <nav>
+              <Link href="/support" className="block px-2 py-1 bg-[#e9f4fe] text-[#16213e] rounded hover:bg-[#d0e8fd]">
+                Support
+              </Link>
+            </nav>
+          </div>
         </div>
 
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="w-full p-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700"
+          className="mt-6 w-full py-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700"
         >
           Logout
         </button>
       </aside>
+
 
       {/* Main Content */}
       <main className="flex-1 p-6">

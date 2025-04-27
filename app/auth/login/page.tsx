@@ -23,35 +23,57 @@ export default function Login() {
             <div className="w-full max-w-md bg-[#eeedf3] p-6 rounded-lg shadow-lg text-white">
                 <h2 className="text-2xl font-bold text-center text-[#16213e] mb-4">Login</h2>
                 <Formik initialValues={initialValues} onSubmit={onSubmit}>
-                    {({ isSubmitting }) => (
+                    {({ isSubmitting }) => {
+                        const [showPassword, setShowPassword] = useState(false);
+                        return (
                         <Form className="space-y-4">
-                            <Field 
-                                type="email" 
-                                name="email" 
-                                placeholder="Email" 
-                                className="w-full p-2 bg-white border border-gray-600 rounded text-[#16213e]"
+                            <Field
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            className="w-full p-2 bg-white border border-gray-600 rounded text-[#16213e]"
+                            validate={(value: string) => !value ? "Email is required" : undefined}
                             />
                             <ErrorMessage name="email" component="p" className="text-red-400" />
-                            
-                            <Field 
-                                type="password" 
-                                name="password" 
-                                placeholder="Password" 
+
+                            <div className="relative">
+                            <Field
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                placeholder="Password"
                                 className="w-full p-2 bg-white border border-gray-600 rounded text-[#16213e]"
+                                validate={(value: string) => !value ? "Password is required" : undefined}
                             />
-                            <ErrorMessage name="password" component="p" className="text-red-400" />
-                            
-                            <button 
-                                type="submit" 
-                                className="w-full p-2 bg-[#16213e] text-[white] font-bold rounded hover:bg-[#e9f4fe] hover:text-[#16213e]"
-                                disabled={loading}
+                            <button
+                                type="button"
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-[#16213e] underline"
+                                onClick={() => setShowPassword((prev) => !prev)}
                             >
-                                {loading ? 'Logging in...' : 'Login'}
+                                {showPassword ? "Hide" : "Show"}
+                            </button>
+                            </div>
+                            <ErrorMessage name="password" component="p" className="text-red-400" />
+
+                            <button
+                            type="submit"
+                            className="w-full p-2 bg-[#16213e] text-[white] font-bold rounded hover:bg-[#e9f4fe] hover:text-[#16213e]"
+                            disabled={loading}
+                            >
+                            {loading ? "Logging in..." : "Login"}
                             </button>
                         </Form>
-                    )}
+                        );
+                    }}
                 </Formik>
 
+
+                {/* Forgot Password Link */}
+                <p className="mt-4 text-center text-[#16213e]">
+                    Forgot Password?{" "}
+                    <Link href="/auth/password/forgot" className="text-[#0e145a] font-semibold hover:underline">
+                        Click here to reset your password
+                    </Link>
+                </p>
                 {/* Register Link */}
                 <p className="mt-4 text-center text-[#16213e]">
                     Not registered?{" "}

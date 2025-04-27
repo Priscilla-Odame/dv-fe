@@ -197,6 +197,21 @@ export default function HomePage() {
             )}
           </div>
         </section>
+        {/* Membership & Affiliate Call-to-Action */}
+        <section className="w-full text-center py-8 bg-[var(--overlay-light)] text-gray-800">
+          <p className="text-lg">
+            Want more perks?{" "}
+            <Link href="/member/register" className="text-[var(--primary-blue)] font-semibold underline">
+              Become a member
+            </Link>{" "}
+            for exclusive benefits, or{" "}
+            <Link href="/affiliate/register" className="text-[var(--primary-blue)] font-semibold underline">
+              sign up as an affiliate
+            </Link>{" "}
+            to start earning with us!
+          </p>
+        </section>
+
       </div>
     </CustomerPageWrapper>
   );

@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/helpers/route";
-import { SignUpFormData } from "@/types/iauth";
+import { ForgotPasswordFormData, ResetPassFormData, ResetPasswordFormData, SignUpFormData } from "@/types/iauth";
 import axios from "axios";
 
 export const loginFxn = async (body: { email: string; password: string }, setLoading: any) => {
@@ -46,6 +46,36 @@ export const loginFxn = async (body: { email: string; password: string }, setLoa
     });
 };
 
+export const forgotPasswordFxn = (body: ForgotPasswordFormData) => {
+  console.log("Body->>>", body);
+  let response = axios
+    .post(`${BASE_URL}auth/forgot-password`, body)
+    .then((resp) => {
+      if (resp.status == 200) {
+        console.log(response);
+        // window.location.href = "/auth/login";
+      }
+    })
+    .then((err) => {
+      console.log(err);
+    });
+};
+
+export const resetPasswordFxn = (body: ResetPassFormData) => {
+  console.log("Body->>>", body);
+  let response = axios
+    .post(`${BASE_URL}auth/reset-password`, body)
+    .then((resp) => {
+      if (resp.status == 200) {
+        console.log(response);
+        // window.location.href = "/auth/login";
+      }
+    })
+    .then((err) => {
+      console.log(err);
+    });
+};
+
 export const registerFxn = (body: SignUpFormData) => {
   console.log("Body->>>", body);
   Object.keys(body).forEach((key) => {
@@ -86,16 +116,47 @@ export const registerAdminFxn = (body: SignUpFormData) => {
       console.log(err);
     });
 };
-export const registerMemberFxn = (body: SignUpFormData) => {
+export const registerMemberFxn = (body: SignUpFormData, qryParams:any) => {
   console.log("Body->>>", body);
   Object.keys(body).forEach((key) => {
     if (body[key as keyof SignUpFormData] === "") {
       delete body[key as keyof SignUpFormData]; // Correctly delete the property
     }
   });
+  const {affiliateUser, affiliateNumber, utmSource, utmMedium, utmCampaign } = qryParams
 
   let response = axios
-    .post(`${BASE_URL}auth/member/register`, body)
+    // .post(`${BASE_URL}auth/member/register`, body)
+    .post(
+      affiliateUser && affiliateNumber && utmSource && utmMedium && utmCampaign ?
+          `${BASE_URL}auth/member/register?user=${affiliateUser}&num=${affiliateNumber}&utm_source=${utmSource}&utm_medium=${utmMedium}&utm_campaign=${utmCampaign}` : `${BASE_URL}auth/member/register`
+    )
+    .then((resp) => {
+      if (resp.status == 200) {
+        console.log(response);
+        window.location.href = "/auth/login";
+      }
+    })
+    .then((err) => {
+      console.log(err);
+    });
+};
+
+export const registerAffiliateFxn = (body: SignUpFormData) => {
+  console.log("Body->>>", body);
+  Object.keys(body).forEach((key) => {
+    if (body[key as keyof SignUpFormData] === "") {
+      delete body[key as keyof SignUpFormData]; // Correctly delete the property
+    }
+  });
+  // const {affiliateUser, affiliateNumber, utmSource, utmMedium, utmCampaign } = qryParams
+
+  let response = axios
+    .post(`${BASE_URL}auth/affiliate/register`, body)
+    // .post(
+    //   affiliateUser && affiliateNumber && utmSource && utmMedium && utmCampaign ?
+    //       `${BASE_URL}auth/member/register?user=${affiliateUser}&num=${affiliateNumber}&utm_source=${utmSource}&utm_medium=${utmMedium}&utm_campaign=${utmCampaign}` : `${BASE_URL}auth/member/register`
+    // )
     .then((resp) => {
       if (resp.status == 200) {
         console.log(response);
