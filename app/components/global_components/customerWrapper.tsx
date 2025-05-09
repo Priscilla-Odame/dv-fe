@@ -1,9 +1,9 @@
 import Image from "next/image";
 import CustomerPageFooter from "./customerFooter";
 import { FiSearch, FiShoppingCart, FiUser } from "react-icons/fi";
-import Link from "next/link";
 import CustomerPageHeader from "./customerHeader";
 import CartModal from "./cart";
+import { useEffect, useState } from "react";
 
 export default function CustomerPageWrapper({
   children,
@@ -17,11 +17,27 @@ export default function CustomerPageWrapper({
   cartOpen,
   removeFromCart,
 }: any) {
-  const siteMap = [
+  const [siteMap, setSiteMap] = useState([
     { title: "Home", link: "/" },
     { title: "Shop", link: "/products" },
-    { title: "Dashboard", link: "/member/dashboard" },
-  ];
+    { title: "Dashboard", link: "/auth/login" }, // default fallback
+  ]);
+
+  useEffect(() => {
+    const memType = sessionStorage.getItem("u_mem_type");
+    const dashboardLink =
+      memType === "affiliate"
+        ? "/affiliate/dashboard"
+        : memType === "member"
+        ? "/member/dashboard"
+        : "/auth/login";
+
+    setSiteMap([
+      { title: "Home", link: "/" },
+      { title: "Shop", link: "/products" },
+      { title: "Dashboard", link: dashboardLink },
+    ]);
+  }, []);
   return (
     <>
       {cartOpen && (

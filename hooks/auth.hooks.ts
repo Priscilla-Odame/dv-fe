@@ -23,7 +23,7 @@ export const loginFxn = async (body: { email: string; password: string }, setLoa
           setLoading(false);
           resp.data.user.role != "admin"
             ? resp.data.user.membership_type == "affiliate"
-              ? (window.location.href = "/dashboard")
+              ? (window.location.href = "/affiliate/dashboard")
               : (window.location.href = "/member/dashboard")
             : (window.location.href = "/admin/dashboard");
           // window.location.href = "/admindashboard"
