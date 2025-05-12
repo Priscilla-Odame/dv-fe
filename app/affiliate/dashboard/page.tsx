@@ -10,6 +10,11 @@ type AffiliateData = {
   affiliate_link: string;
   link_expiry: string;
   total_commission: string;
+  bank_verified?: boolean;
+  bank_account_number?: string;
+  bank_name?: string;
+  last_payout_date?: string;
+  last_payout_amount?: string;
 };
 
 export default function Dashboard() {
@@ -19,8 +24,8 @@ export default function Dashboard() {
     link_expiry: "",
     total_commission: "",
   });
-  const [selectedPlatform, setSelectedPlatform] = useState<string>(""); // Platform dropdown state
-  const [generatedLink, setGeneratedLink] = useState<string>(""); // Stores generated link with UTM parameters
+  const [selectedPlatform, setSelectedPlatform] = useState<string>("");
+  const [generatedLink, setGeneratedLink] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isExpired, setIsExpired] = useState(false);
@@ -115,9 +120,10 @@ export default function Dashboard() {
       </button>
 
       <aside
-        className={`fixed inset-y-0 left-0 bg-[#16213e] p-6 shadow-lg flex flex-col justify-between h-screen transform ${
+        className={`bg-[#16213e] p-6 shadow-lg flex flex-col h-screen overflow-y-auto justify-between transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform md:translate-x-0 md:relative md:w-64 z-30`}
+        } transition-transform md:translate-x-0 md:relative md:w-64 z-30
+        fixed md:static md:flex-shrink-0`}
       >
         <div>
           <button
@@ -127,43 +133,57 @@ export default function Dashboard() {
             <FiX size={24} />
           </button>
 
-          <h2 className="text-2xl font-bold text-[#e9f4fe] mb-6">Dashboard</h2>
-          <nav className="space-y-4">
-            <Link
-              href="/profile-settings"
-              className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]"
-            >
-              Profile Settings
-            </Link>
-            <Link
-              href="/account-settings"
-              className="block p-2 bg-[#e9f4fe] text-[#16213e] font-bold rounded-full hover:bg-[#d0e8fd]"
-            >
-              Account Settings
-            </Link>
-            <button
-              onClick={isExpired ? generateAffiliate : undefined}
-              disabled={!isExpired}
-              className={`w-full text-left block p-2 font-bold rounded-full ${
-                isExpired
-                  ? "bg-[#e9f4fe] text-[#16213e] hover:bg-[#d0e8fd]"
-                  : "bg-gray-400 text-gray-600 cursor-not-allowed"
-              }`}
-            >
-              Generate Link
-            </button>
-          </nav>
-        </div>
+          <h2 className="text-2xl font-bold text-white mb-6">Affiliate Dashboard</h2>
 
+        <nav className="space-y-2 text-sm">
+          {/* --- Account & Settings --- */}
+          <Link href="/dashboard" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">Dashboard</Link>
+          <Link href="/profile-settings" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">Profile Settings</Link>
+          {/* <Link href="/account-settings" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">Account Settings</Link> */}
+
+          {/* --- Affiliate Tools --- */}
+          <div className="mt-6 text-xs uppercase text-[#a3c4f3] font-semibold tracking-wide">Tools</div>
+          <button
+            onClick={isExpired ? generateAffiliate : undefined}
+            disabled={!isExpired}
+            className={`w-full text-left block px-4 py-2 font-semibold rounded-md transition ${
+              isExpired
+                ? "bg-[#e9f4fe] text-[#16213e] hover:bg-[#d0e8fd]"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"
+            }`}
+          >
+            Generate Link
+          </button>
+          {/* <Link href="/products" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">Product Links</Link> */}
+          {/* <Link href="/utm-builder" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">UTM Builder</Link> */}
+
+          {/* --- Performance --- */}
+          <div className="mt-6 text-xs uppercase text-[#a3c4f3] font-semibold tracking-wide">Performance</div>
+          <Link href="/commissions" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">Commission History</Link>
+          <Link href="/referrals" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">Referral Traffic</Link>
+          <Link href="/payouts" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">Payout History</Link>
+
+          {/* --- Bank ---
+          <div className="mt-6 text-xs uppercase text-[#a3c4f3] font-semibold tracking-wide">Bank & Payments</div>
+          <Link href="/bank-info" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">Bank Details</Link>
+          <Link href="/verify-bank" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">Verify Account</Link> */}
+
+          {/* --- Support --- */}
+          <div className="mt-6 text-xs uppercase text-[#a3c4f3] font-semibold tracking-wide">Support</div>
+          {/* <Link href="/faqs" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">FAQs</Link> */}
+          <Link href="/support" className="block px-4 py-2 rounded-md text-white hover:bg-[#2e3a5c] transition">Contact Support</Link>
+        </nav>
+        </div>
         <button
           onClick={handleLogout}
-          className="w-full p-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 mt-auto"
+          className="w-full text-left block px-4 py-2 font-semibold rounded-md transition bg-red-600 hover:bg-red-700 mt-auto"
         >
           Logout
         </button>
+
       </aside>
 
-      <main className="flex-1 p-6 bg-[#e9f4fe] text-[#16213e]">
+      <main className="flex-1 flex-col h-screen overflow-y-auto p-6 bg-[#e9f4fe] text-[#16213e]">
         <h1 className="text-3xl font-bold">Welcome to Your Dashboard</h1>
 
         <div className="mt-6 bg-white p-4 rounded-lg shadow-lg">
@@ -211,7 +231,6 @@ export default function Dashboard() {
                   </a>
                 </div>
               )}
-              {/* Display base affiliate link if it exists and is valid */}
               {affiliate.affiliate_link && !isExpired && (
                 <div className="mt-6 p-4 border rounded bg-[#f8f9fc]">
                   <h3 className="text-xl font-bold">Base Affiliate Link:</h3>
@@ -225,16 +244,55 @@ export default function Dashboard() {
                       {affiliate.affiliate_link}
                     </a>
                   </p>
-
                 </div>
               )}
-                  {/* View Products Button */}
-                  <Link
-                    href="/products"
-                    className="inline-block mt-4 bg-[#16213e] text-[#e9f4fe] font-bold px-4 py-2 rounded hover:bg-[#0f1a2e]"
-                  >
-                    View Products
-                  </Link>
+
+              {/* New: Bank Info */}
+              <div className="mt-6 p-4 border rounded bg-[#fff7ed]">
+                <h3 className="text-xl font-bold">Bank Account Info</h3>
+                <p className="mt-2 text-gray-800">
+                  <strong>Bank:</strong>{" "}
+                  {affiliate.bank_name || "Not Provided"}
+                </p>
+                <p className="text-gray-800">
+                  <strong>Account Number:</strong>{" "}
+                  {affiliate.bank_account_number || "Not Provided"}
+                </p>
+                <p className="text-gray-800">
+                  <strong>Status:</strong>{" "}
+                  {affiliate.bank_verified ? (
+                    <span className="text-green-600 font-semibold">
+                      Verified
+                    </span>
+                  ) : (
+                    <span className="text-red-600 font-semibold">
+                      Not Verified
+                    </span>
+                  )}
+                </p>
+              </div>
+
+              {/* New: Last Payout */}
+              <div className="mt-6 p-4 border rounded bg-[#f3faff]">
+                <h3 className="text-xl font-bold">Last Payout</h3>
+                <p className="mt-2 text-gray-800">
+                  <strong>Date:</strong>{" "}
+                  {affiliate.last_payout_date || "No payout yet"}
+                </p>
+                <p className="text-gray-800">
+                  <strong>Amount:</strong>{" "}
+                  {affiliate.last_payout_amount
+                    ? `₦${affiliate.last_payout_amount}`
+                    : "₦0.00"}
+                </p>
+              </div>
+
+              <Link
+                href="/products"
+                className="inline-block mt-4 bg-[#16213e] text-[#e9f4fe] font-bold px-4 py-2 rounded hover:bg-[#0f1a2e]"
+              >
+                View Products
+              </Link>
             </>
           )}
         </div>

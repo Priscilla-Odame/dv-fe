@@ -13,7 +13,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#eeedf3]">
+    <div className="flex flex-col h-screen overflow-y-auto bg-[#eeedf3]">
 
 
       {/* Content Area */}

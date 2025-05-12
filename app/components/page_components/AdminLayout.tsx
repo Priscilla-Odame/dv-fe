@@ -25,7 +25,7 @@ export default function AdminDashboard({ children }: any) {
       <aside
         className={`fixed inset-y-0 left-0 bg-[#16213e] text-[#e9f4fe] p-6 shadow-lg flex flex-col justify-between h-screen transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform md:translate-x-0 md:relative md:w-64 z-30`}
+        } transition-transform md:translate-x-0 md:relative md:w-1/4 z-30`}
       >
         <div>
           {/* Close Button (Mobile) */}
@@ -69,7 +69,7 @@ export default function AdminDashboard({ children }: any) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-6">
+      <main className="flex-col h-screen overflow-y-auto p-6 md:w-3/4">
         {children}
       </main>
     </div>
